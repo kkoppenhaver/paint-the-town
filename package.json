@@ -1,0 +1,23 @@
+{
+  "name": "paint-the-town",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Playtest simulator for Paint the Town — a closing-wall territory game on a virtual Chicago.",
+  "type": "module",
+  "workspaces": [
+    "engine",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "build:board": "node scripts/build-board.mjs",
+    "test": "npm run test --workspace engine",
+    "sim": "npm run sim --workspace engine",
+    "server": "npm run dev --workspace server",
+    "client": "npm run dev --workspace client",
+    "build": "npm run build --workspace engine && npm run build --workspace client"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
