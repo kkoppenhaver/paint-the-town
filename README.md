@@ -36,8 +36,15 @@ npm run sim                       # 20 games, prints aggregate balance stats
 # 2. Two-browser / hot-seat play
 npm run dev                       # boots BOTH the room server (:8787) and the client (:5173)
 #   (or run them separately: `npm run server` and `npm run client`)
-# open http://localhost:5173?room=demo  (open the same URL in a 2nd browser window for two
-# teams — tile each to half the screen — or drive both team panels in one window for hot-seat)
+#
+# Two side-by-side browsers, one team each (tile each to half your screen):
+#   left  window: http://localhost:5173?room=demo&team=A
+#   right window: http://localhost:5173?room=demo&team=B
+# Each window picks its own spawn, then sees & controls ONLY its team; the opponent
+# shows as a read-only card. Either player can start once both have spawned.
+#
+# Single screen? Open http://localhost:5173?room=demo and use the "seat" switch in the
+# top bar to drive both team panels yourself (hot-seat).
 
 # 3. Tests
 npm test                          # engine unit tests (vitest)

@@ -24,7 +24,14 @@ export function MapView({ board, state, teamColors, onPickArea }: Props) {
     if (!ref.current || mapRef.current) return;
     const map = new maplibregl.Map({
       container: ref.current,
-      style: { version: 8, sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#11141b" } }] },
+      style: {
+        version: 8,
+        // Glyphs for area-name labels. The board geometry is local (board.json);
+        // this CDN only supplies label fonts and degrades gracefully offline.
+        glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+        sources: {},
+        layers: [{ id: "bg", type: "background", paint: { "background-color": "#11141b" } }],
+      },
       center: [-87.68, 41.84],
       zoom: 9.6,
       attributionControl: false,
@@ -52,7 +59,7 @@ export function MapView({ board, state, teamColors, onPickArea }: Props) {
         id: "area-label",
         type: "symbol",
         source: "areas",
-        layout: { "text-field": ["get", "name"], "text-size": 9 },
+        layout: { "text-field": ["get", "name"], "text-font": ["Noto Sans Regular"], "text-size": 9, "text-max-width": 7 },
         paint: { "text-color": "#cdd3df", "text-halo-color": "#0008", "text-halo-width": 1 },
       });
 
@@ -69,7 +76,14 @@ export function MapView({ board, state, teamColors, onPickArea }: Props) {
       loadedRef.current = true;
       paint();
     });
+
+    // MapLibre doesn't track container size changes (layout reflow, window
+    // tiling, lobby→game switch) — keep the canvas matched to its box.
+    const ro = new ResizeObserver(() => map.resize());
+    ro.observe(ref.current);
+
     return () => {
+      ro.disconnect();
       map.remove();
       mapRef.current = null;
       loadedRef.current = false;

@@ -9,9 +9,13 @@ interface Props {
   team: Team;
   selectedArea: number | null;
   onIntent: (teamId: string, intent: Intent) => void;
+  /** false → read-only opponent card (status + score, no controls). */
+  controllable?: boolean;
+  /** "(you)" tag on your own panel in two-browser play. */
+  mine?: boolean;
 }
 
-export function TeamPanel({ board, state, team, selectedArea, onIntent }: Props) {
+export function TeamPanel({ board, state, team, selectedArea, onIntent, controllable = true, mine = false }: Props) {
   const [dest, setDest] = useState<number | "">("");
   const idle = !team.inTransit && team.busyUntilSimTime == null && !team.waiting;
   const here = board.areas.find((a) => a.id === team.locationAreaId)!;
@@ -22,9 +26,11 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent }: Props)
   const target = dest !== "" ? dest : selectedArea ?? "";
 
   return (
-    <div className="panel" style={{ borderTopColor: team.color }}>
+    <div className={`panel${controllable ? "" : " panel-readonly"}`} style={{ borderTopColor: team.color }}>
       <div className="panel-head">
         <span className="dot" style={{ background: team.color }} /> {team.name}
+        {mine && <span className="you-tag">you</span>}
+        {!controllable && <span className="opp-tag">opponent</span>}
       </div>
 
       <div className="panel-status">
@@ -44,6 +50,8 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent }: Props)
         <span>provisional <strong>{team.provisionalScore}</strong></span>
       </div>
 
+      {!controllable ? null : (
+      <>
       <div className="panel-actions">
         <button disabled={!canClaim} onClick={() => onIntent(team.id, { kind: "claim" })}>
           {captures ? "Capture" : "Claim"} {here.name}
@@ -80,6 +88,8 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent }: Props)
             </button>
           ))}
         </div>
+      )}
+      </>
       )}
     </div>
   );
