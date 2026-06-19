@@ -58,8 +58,10 @@ export default function App() {
               {room.state.teams.slice(1).map((t) => (
                 <TeamPanel key={t.id} board={board} state={room.state!} team={t} selectedArea={selectedArea} onIntent={room.sendIntent} />
               ))}
-              <EventFeed log={room.state.log} config={room.state.config} names={names} />
             </aside>
+            <section className="feedwrap">
+              <EventFeed log={room.state.log} config={room.state.config} names={names} />
+            </section>
           </div>
           {room.phase === "finished" && <Summary board={board} state={room.state} onReset={room.reset} />}
         </div>

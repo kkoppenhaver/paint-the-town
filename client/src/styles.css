@@ -15,17 +15,54 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
 /* lobby */
 .lobby { display: grid; grid-template-columns: 320px 1fr; flex: 1; min-height: 0; }
 .lobby-side { padding: 16px; border-right: 1px solid var(--line); overflow: auto; }
+@media (max-width: 1200px) {
+  .lobby { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+  .lobby-side { border-right: none; border-bottom: 1px solid var(--line); max-height: 45vh; }
+}
 .lobby-team { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
 .lobby-team .spawn { color: var(--muted); flex: 1; }
 .start { margin-top: 16px; width: 100%; }
 .hint { color: var(--muted); font-size: 12px; margin-top: 20px; }
 
-/* game layout */
+/* game layout — wide screen: panels flank the map, feed under team B */
 .game { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-.game-body { display: grid; grid-template-columns: 280px 1fr 320px; flex: 1; min-height: 0; }
-.left, .right { background: var(--panel); border-left: 1px solid var(--line); overflow: auto; display: flex; flex-direction: column; }
-.left { border-left: none; border-right: 1px solid var(--line); }
+.game-body {
+  display: grid; flex: 1; min-height: 0;
+  grid-template-columns: 270px 1fr 300px;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "left center right"
+    "left center feed";
+}
+.left  { grid-area: left; }
+.center { grid-area: center; }
+.right { grid-area: right; }
+.feedwrap { grid-area: feed; min-height: 0; display: flex; }
+.left, .right { background: var(--panel); overflow: auto; display: flex; flex-direction: column; }
+.left { border-right: 1px solid var(--line); }
+.right { border-left: 1px solid var(--line); }
+.feedwrap { background: var(--panel); border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
 .center { position: relative; min-height: 0; }
+
+/* half-screen / tiled window: map on top, team panels side-by-side, feed across bottom.
+   Targets each browser taking ~half a laptop (≈720–1200px wide, full height). */
+@media (max-width: 1200px) {
+  .game-body {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(120px, auto) minmax(110px, 26vh);
+    grid-template-areas:
+      "center center"
+      "left   right"
+      "feed   feed";
+  }
+  .left { border-right: 1px solid var(--line); }
+  .right { border-left: none; }
+  .feedwrap { border-left: none; }
+  .left, .right { max-height: 34vh; }
+  /* compact the HUD so it never pushes the map down at narrow widths */
+  .hud { flex-wrap: wrap; gap: 10px 14px; padding: 8px 12px; }
+  .hud-scores { margin-left: 0; }
+}
 
 /* hud */
 .hud { display: flex; gap: 18px; padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--line); align-items: center; }
@@ -57,7 +94,7 @@ button.apply, .start, .summary-actions .apply { background: #2563eb; border-colo
 select, input { background: #20242f; color: var(--text); border: 1px solid var(--line); border-radius: 5px; padding: 5px; }
 
 /* feed */
-.feed { flex: 1; min-height: 0; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.feed { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .feed-title { padding: 8px 12px; font-weight: 600; color: var(--muted); }
 .feed-scroll { overflow: auto; padding: 0 12px 12px; }
 .feed-row { display: flex; gap: 6px; padding: 2px 0; border-bottom: 1px solid #1b202c; font-size: 12px; }
