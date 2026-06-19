@@ -34,10 +34,10 @@ npm run sim                       # 20 games, prints aggregate balance stats
 #   from engine/:  npx tsx src/cli/sim.ts --games 50 --a edge_sweep --b core_rush --csv out.csv
 
 # 2. Two-browser / hot-seat play
-npm run server                    # authoritative room server on :8787
-npm run client                    # Vite dev server on :5173
-# open http://localhost:5173?room=demo  (open the same URL in a 2nd browser for two teams,
-# or drive both team panels in one window for solo hot-seat)
+npm run dev                       # boots BOTH the room server (:8787) and the client (:5173)
+#   (or run them separately: `npm run server` and `npm run client`)
+# open http://localhost:5173?room=demo  (open the same URL in a 2nd browser window for two
+# teams — tile each to half the screen — or drive both team panels in one window for hot-seat)
 
 # 3. Tests
 npm test                          # engine unit tests (vitest)

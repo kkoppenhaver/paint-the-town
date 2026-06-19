@@ -13,9 +13,13 @@
     "build:board": "node scripts/build-board.mjs",
     "test": "npm run test --workspace engine",
     "sim": "npm run sim --workspace engine",
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm:server\" \"npm:client\"",
     "server": "npm run dev --workspace server",
     "client": "npm run dev --workspace client",
     "build": "npm run build --workspace engine && npm run build --workspace client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
   },
   "engines": {
     "node": ">=20"
