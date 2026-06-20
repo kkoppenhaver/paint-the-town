@@ -36,7 +36,11 @@ function label(e: EventLogEntry, names: Record<string, string>): string {
     case "game_start": return "Game start — spawns revealed";
     case "travel_start": return `${who} → ${area} (${e.detail?.minutes}m, ${e.detail?.source})`;
     case "arrive": return `${who} arrived at ${area}`;
-    case "claim_start": return `${who} attempting ${area} (${e.detail?.duration}m${e.detail?.capture ? ", capture" : ""})`;
+    case "claim_start": {
+      const ch = e.detail?.challenge as { title?: string; type?: string } | undefined;
+      const chTxt = ch?.title ? ` — ${ch.type}: “${ch.title}”` : "";
+      return `${who} attempting ${area} (${e.detail?.duration}m${e.detail?.capture ? ", capture" : ""})${chTxt}`;
+    }
     case "claim_success": return `${who} claimed ${area}`;
     case "capture": return `${who} captured ${area}`;
     case "claim_fail": return `${who} flopped ${area}${e.detail?.reason === "wall" ? " (wall hit)" : ""}`;

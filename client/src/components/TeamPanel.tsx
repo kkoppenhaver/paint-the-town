@@ -45,6 +45,17 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
         )}
       </div>
 
+      {team.busyClaim?.challenge && (
+        <div className="challenge-card">
+          <div className="ch-head">🎯 {team.busyClaim.challenge.type} challenge · difficulty {team.busyClaim.challenge.difficulty}</div>
+          <div className="ch-title">{team.busyClaim.challenge.title}</div>
+          <div className="ch-prompt">{team.busyClaim.challenge.prompt}</div>
+          {team.busyClaim.challenge.restriction && (
+            <div className="ch-restrict">⚠ {team.busyClaim.challenge.restriction}</div>
+          )}
+        </div>
+      )}
+
       <div className="panel-score">
         <span>locked <strong>{team.lockedScore}</strong></span>
         <span>provisional <strong>{team.provisionalScore}</strong></span>

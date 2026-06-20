@@ -12,6 +12,7 @@ import type {
   AreaState,
   Board,
   Cache,
+  Challenge,
   Config,
   EventLogEntry,
   EventType,
@@ -215,10 +216,30 @@ export function submitClaim(state: GameState, board: Board, teamId: TeamId): voi
   if (t.lastFailedClaimAreaId === here) duration += state.config.challenge.retryPenaltyMin;
 
   const doubleDown = consumeEffect(t, "double_down");
+  const challenge = drawChallenge(board, here, a);
   t.waiting = false;
   t.busyUntilSimTime = state.clock.simTime + duration;
-  t.busyClaim = { areaId: here, capture, doubleDown };
-  log(state, "claim_start", { duration, capture, doubleDown }, teamId, here);
+  t.busyClaim = { areaId: here, capture, doubleDown, challenge };
+  log(
+    state,
+    "claim_start",
+    { duration, capture, doubleDown, challenge: challenge ?? undefined },
+    teamId,
+    here,
+  );
+}
+
+/**
+ * Pick the area's challenge for this claim. Deterministic and does NOT consume the
+ * game RNG (so it never perturbs claim-success rolls): it cycles through the deck by
+ * how many times the area has already been claimed (deckSize − deckRemaining).
+ */
+function drawChallenge(board: Board, areaId: AreaId, a: AreaState): Challenge | null {
+  const deck = board.challenges?.[String(areaId)];
+  if (!deck || deck.length === 0) return null;
+  const claimedSoFar = getArea(board, areaId).deckSize - a.deckRemaining;
+  const idx = ((claimedSoFar % deck.length) + deck.length) % deck.length;
+  return deck[idx] ?? null;
 }
 
 /** A team with no pending move commits to idle; re-activated at the next decision point. */

@@ -25,10 +25,24 @@ export interface AreaStatic {
   deckSize: number;
 }
 
+export type ChallengeType = "photo" | "trivia" | "measure" | "physical" | "find" | "riddle";
+
+/** A neighborhood-specific challenge (Jet Lag: The Game style), drawn on claim. */
+export interface Challenge {
+  id: string;
+  type: ChallengeType;
+  title: string;
+  prompt: string;
+  difficulty: 1 | 2 | 3;
+  restriction: string | null;
+}
+
 export interface Board {
   areas: AreaStatic[];
   adjacency: Record<string, AreaId[]>;
   loopAreaId: AreaId;
+  /** Per-area challenge decks, keyed by area id (string). Optional: empty = none. */
+  challenges?: Record<string, Challenge[]>;
 }
 
 /** Mutable per-area runtime state. */
@@ -58,7 +72,7 @@ export interface Team {
   locationAreaId: AreaId;
   inTransit: { destId: AreaId; departSimTime: number; arrivalSimTime: number } | null;
   busyUntilSimTime: number | null; // claiming/capturing
-  busyClaim: { areaId: AreaId; capture: boolean; doubleDown: boolean } | null;
+  busyClaim: { areaId: AreaId; capture: boolean; doubleDown: boolean; challenge: Challenge | null } | null;
   /** Explicitly chose to idle; cleared by the next decision point. */
   waiting: boolean;
   lockedScore: number;

@@ -4,6 +4,7 @@
 import {
   advance,
   allCommitted,
+  buildDebugLog,
   createGame,
   DEFAULT_CONFIG,
   cloneConfig,
@@ -16,6 +17,7 @@ import {
   usePowerUp,
   type Board,
   type Config,
+  type DebugLog,
   type GameState,
   type TravelProvider,
   type TeamId,
@@ -28,6 +30,8 @@ export class Room {
   config: Config = cloneConfig(DEFAULT_CONFIG);
   spawns: Record<TeamId, AreaId> = {};
   state: GameState | null = null;
+  /** Set once a finished game's debug log has been written (avoid duplicate writes). */
+  debugLogged = false;
   private provider: TravelProvider;
 
   constructor(
@@ -61,12 +65,20 @@ export class Room {
     }
     this.state = createGame(this.config, this.board, this.spawns);
     this.phase = "running";
+    this.debugLogged = false;
   }
 
   reset(): void {
     this.phase = "lobby";
     this.state = null;
     this.spawns = {};
+    this.debugLogged = false;
+  }
+
+  /** Build a debug/audit log of the current game (null if no game exists yet). */
+  debugSnapshot(meta: { generatedAtReal: string }): DebugLog | null {
+    if (!this.state) return null;
+    return buildDebugLog(this.state, this.board, meta);
   }
 
   /** Apply an intent, then fast-forward the clock to the next decision point. */

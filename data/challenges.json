@@ -1,0 +1,393 @@
+{
+  "_meta": {
+    "description": "Per-neighborhood challenge decks for Paint the Town, Jet Lag: The Game style. Each of the 77 Chicago community areas has a deck of challenges grounded in real, verified local landmarks. Drawn when a team claims/captures that area. type: photo|trivia|measure|physical|find|riddle. difficulty: 1 (quick) .. 3 (effortful). restriction: optional Jetlag-style constraint.",
+    "challengesPerArea": 3
+  },
+  "byArea": {
+    "1": [
+      {"id":"rogers-park-1","type":"find","title":"Mile of Murals","prompt":"Find any mural along the Glenwood Ave 'Mile of Murals' between the Morse and Loyola Red Line stops and read its painted title aloud.","difficulty":1,"restriction":null},
+      {"id":"rogers-park-2","type":"photo","title":"Lakefront from a beach","prompt":"Take a photo standing on the sand at any of Rogers Park's lakefront beaches (e.g. Loyola, Pratt, or Hartigan) with the water behind you.","difficulty":2,"restriction":"No one else may appear in frame"},
+      {"id":"rogers-park-3","type":"trivia","title":"Jesuit lakeside chapel","prompt":"At Loyola's lakeside campus, name the Art Deco chapel facing the lake. Verify the answer is Madonna della Strada.","difficulty":2,"restriction":null}
+    ],
+    "2": [
+      {"id":"west-ridge-1","type":"find","title":"Devon Ave nations","prompt":"Walk Devon Ave and find storefront signage in at least three different languages or scripts; photograph all three.","difficulty":2,"restriction":null},
+      {"id":"west-ridge-2","type":"trivia","title":"Boundary line park","prompt":"At Indian Boundary Park, verify which 1816 treaty boundary the park is named for (the Potawatomi land line).","difficulty":2,"restriction":null},
+      {"id":"west-ridge-3","type":"measure","title":"Rosehill gate","prompt":"Estimate then verify the height of the castellated limestone main gate of Rosehill Cemetery on Ravenswood Ave.","difficulty":1,"restriction":null}
+    ],
+    "3": [
+      {"id":"uptown-1","type":"photo","title":"Marquee row","prompt":"Photograph the marquee or facade of the Aragon Ballroom OR the shuttered Uptown Theatre on N Broadway/Lawrence.","difficulty":1,"restriction":null},
+      {"id":"uptown-2","type":"trivia","title":"Oldest jazz room","prompt":"At the Green Mill on Broadway, verify the year it opened (1907) — Chicago's oldest continuously running jazz club.","difficulty":1,"restriction":null},
+      {"id":"uptown-3","type":"riddle","title":"Spanish-Moorish dance hall","prompt":"Stars twinkle on my ceiling and 5,000 once danced beneath my Moorish arches on Lawrence. Find me.","difficulty":2,"restriction":null}
+    ],
+    "4": [
+      {"id":"lincoln-square-1","type":"find","title":"Beardless Lincoln","prompt":"Find the Abraham Lincoln statue near Lincoln & Lawrence and confirm it depicts him WITHOUT his famous beard.","difficulty":1,"restriction":null},
+      {"id":"lincoln-square-2","type":"photo","title":"Giddings Plaza","prompt":"Take a photo under one of the green 'Lincoln Square' archways framing the Giddings Plaza pedestrian strip.","difficulty":1,"restriction":null},
+      {"id":"lincoln-square-3","type":"physical","title":"Folk music steps","prompt":"At the Old Town School of Folk Music on Lincoln Ave, climb its front steps and hum a folk tune at the top.","difficulty":2,"restriction":"Must be a recognizable melody"}
+    ],
+    "5": [
+      {"id":"north-center-1","type":"find","title":"St. Ben's bell tower","prompt":"Find St. Benedict Church at Irving Park & Leavitt and locate its landmark bell tower, visible for blocks.","difficulty":1,"restriction":null},
+      {"id":"north-center-2","type":"photo","title":"Town Square","prompt":"Take a photo at North Center Town Square (Damen & Belle Plaine area) with a street sign reading 'Damen' in frame.","difficulty":1,"restriction":null},
+      {"id":"north-center-3","type":"measure","title":"Riverview's ghost","prompt":"Stand near Western & Belmont, former site of Riverview Park, and estimate then verify how many years it operated (1904–1967).","difficulty":3,"restriction":null}
+    ],
+    "6": [
+      {"id":"lake-view-1","type":"photo","title":"Wrigley marquee","prompt":"Photograph yourself under the iconic red Wrigley Field marquee at Clark & Addison.","difficulty":1,"restriction":null},
+      {"id":"lake-view-2","type":"find","title":"Music Box sky","prompt":"Inside or outside the Music Box Theatre on Southport, find evidence of its famous twinkling-star auditorium ceiling.","difficulty":2,"restriction":null},
+      {"id":"lake-view-3","type":"physical","title":"Belmont Harbor lap","prompt":"Jog or walk one full loop of the path around Belmont Harbor's marina.","difficulty":3,"restriction":"No stopping to rest"}
+    ],
+    "7": [
+      {"id":"lincoln-park-1","type":"trivia","title":"Free since when","prompt":"At Lincoln Park Zoo, verify it is one of the last free admission zoos in the U.S. and name the year it was founded (1868).","difficulty":2,"restriction":null},
+      {"id":"lincoln-park-2","type":"photo","title":"Prairie-style cafe","prompt":"Photograph Café Brauer, the 1908 Prairie School landmark beside the zoo's South Pond boardwalk.","difficulty":1,"restriction":null},
+      {"id":"lincoln-park-3","type":"physical","title":"North Ave Beach","prompt":"Touch Lake Michigan at North Avenue Beach, then photograph the skyline from the sand.","difficulty":2,"restriction":null}
+    ],
+    "8": [
+      {"id":"near-north-side-1","type":"measure","title":"Survivor of the fire","prompt":"At the Chicago Water Tower on Michigan Ave, estimate then verify its height — a limestone survivor of the 1871 fire.","difficulty":2,"restriction":null},
+      {"id":"near-north-side-2","type":"photo","title":"Hancock X-braces","prompt":"Photograph the black X-braced facade of 875 N Michigan (the former John Hancock Center).","difficulty":1,"restriction":null},
+      {"id":"near-north-side-3","type":"physical","title":"Pier to wheel","prompt":"Walk the length of Navy Pier from the entrance out to the Centennial Wheel.","difficulty":2,"restriction":"Must reach the wheel's base"}
+    ],
+    "9": [
+      {"id":"edison-park-1","type":"find","title":"Restaurant Row depot","prompt":"Find the Edison Park Metra station at Olmsted & Oliphant on the UP-NW Line, the heart of Restaurant Row.","difficulty":1,"restriction":null},
+      {"id":"edison-park-2","type":"photo","title":"Namesake park","prompt":"Take a photo at Edison Park (the park) on Northwest Highway in front of its historic fieldhouse.","difficulty":1,"restriction":null},
+      {"id":"edison-park-3","type":"trivia","title":"City's edge","prompt":"At any point along Edison Park's NW border, verify which suburb (Park Ridge) lies just across the city line.","difficulty":2,"restriction":null}
+    ],
+    "10": [
+      {"id":"norwood-park-1","type":"riddle","title":"Oldest house","prompt":"Built in 1833 and widely called Chicago's oldest house, I sit in Old Norwood. Find the Noble-Seymour-Crippen House.","difficulty":2,"restriction":null},
+      {"id":"norwood-park-2","type":"physical","title":"Walk the Circle","prompt":"Walk a full loop of 'The Circle,' Norwood Park's historic oval street lined with Victorian homes.","difficulty":2,"restriction":null},
+      {"id":"norwood-park-3","type":"trivia","title":"Grease high school","prompt":"At Taft High School, verify the local claim that it inspired the musical 'Grease.'","difficulty":1,"restriction":null}
+    ],
+    "11": [
+      {"id":"jefferson-park-1","type":"photo","title":"Solidarity Tower","prompt":"Photograph the Copernicus Center's Solidarity Tower, modeled on Warsaw's Royal Castle clock tower.","difficulty":1,"restriction":null},
+      {"id":"jefferson-park-2","type":"trivia","title":"Last atmospheric theater","prompt":"At the Gateway Theatre inside the Copernicus Center, verify it's Chicago's last remaining 'atmospheric'-style theater (opened 1930).","difficulty":2,"restriction":null},
+      {"id":"jefferson-park-3","type":"find","title":"Transit hub","prompt":"Find the Jefferson Park Transit Center where the CTA Blue Line, Metra UP-NW, and many bus routes all meet.","difficulty":1,"restriction":null}
+    ],
+    "12": [
+      {"id":"forest-glen-1","type":"photo","title":"Old Edgebrook charm","prompt":"Take a photo of a home in the Old Edgebrook Historic District, the cottage enclave ringed by forest preserve off Central Ave.","difficulty":2,"restriction":null},
+      {"id":"forest-glen-2","type":"find","title":"Caldwell crossing","prompt":"Find the Edgebrook Metra station where Devon, Lehigh, and Caldwell meet. Photograph the platform sign.","difficulty":1,"restriction":null},
+      {"id":"forest-glen-3","type":"physical","title":"Trail to Bunker Hill","prompt":"Bike or jog a stretch of the North Branch Trail through Forest Glen Woods toward Bunker Hill Forest Preserve.","difficulty":3,"restriction":"On foot or by bike only"}
+    ],
+    "13": [
+      {"id":"north-park-1","type":"trivia","title":"City's first nature center","prompt":"At North Park Village Nature Center, find and name one habitat type (woodland, wetland, prairie, or savanna) marked along its trails.","difficulty":1,"restriction":null},
+      {"id":"north-park-2","type":"photo","title":"NEIU campus","prompt":"Take a photo at the entrance sign of Northeastern Illinois University on St. Louis Ave.","difficulty":1,"restriction":null},
+      {"id":"north-park-3","type":"measure","title":"Walking Stick Woods","prompt":"Estimate then pace off the length of the main loop in Walking Stick Woods. Verify against posted trail signage.","difficulty":2,"restriction":null}
+    ],
+    "14": [
+      {"id":"albany-park-1","type":"find","title":"End of the Brown Line","prompt":"Find the Kimball terminal, the western end of the CTA Brown Line at Kimball and Lawrence. Photograph the station house.","difficulty":1,"restriction":null},
+      {"id":"albany-park-2","type":"photo","title":"Kedzie and Lawrence","prompt":"Take a photo of a Middle Eastern business at the Kedzie and Lawrence commercial stretch.","difficulty":2,"restriction":null},
+      {"id":"albany-park-3","type":"physical","title":"River bend at Ronan","prompt":"Walk the Chicago River path through Ronan Park and reach a point where the river visibly bends.","difficulty":2,"restriction":null}
+    ],
+    "15": [
+      {"id":"portage-park-1","type":"trivia","title":"Spitz swam here","prompt":"At Portage Park's Olympic-size pool, verify which 1972 event was held here where Mark Spitz set world records.","difficulty":2,"restriction":null},
+      {"id":"portage-park-2","type":"photo","title":"Six Corners","prompt":"Take a photo standing at Six Corners, where Milwaukee, Irving Park, and Cicero meet.","difficulty":1,"restriction":null},
+      {"id":"portage-park-3","type":"find","title":"Hatzfeld's fieldhouse","prompt":"Find the 1922 prairie-style Portage Park fieldhouse designed by Clarence Hatzfeld and photograph its facade.","difficulty":2,"restriction":null}
+    ],
+    "16": [
+      {"id":"irving-park-1","type":"photo","title":"Schurz's Prairie school","prompt":"Take a photo of Carl Schurz High School, the Dwight Perkins prairie-style landmark on Milwaukee Ave.","difficulty":2,"restriction":null},
+      {"id":"irving-park-2","type":"find","title":"Into the Villa","prompt":"Find the bungalow-lined blocks of The Villa landmark district and photograph one Arts & Crafts home.","difficulty":2,"restriction":null},
+      {"id":"irving-park-3","type":"trivia","title":"Independence Park name","prompt":"At Independence Park, verify the patriotic holiday the park's name and history honor.","difficulty":1,"restriction":null}
+    ],
+    "17": [
+      {"id":"dunning-1","type":"find","title":"The 1884 stone","prompt":"In Read-Dunning Memorial Park, find the 1884 Dunning Poor Farm dedication stone at the park's center.","difficulty":2,"restriction":null},
+      {"id":"dunning-2","type":"trivia","title":"Wright's first name","prompt":"At Wilbur Wright College, verify the aviator the campus is named after by reading its signage.","difficulty":1,"restriction":null},
+      {"id":"dunning-3","type":"measure","title":"Count the markers","prompt":"Count the historic markers placed around Read-Dunning Memorial Park's central stone and verify the total.","difficulty":2,"restriction":null}
+    ],
+    "18": [
+      {"id":"montclare-1","type":"photo","title":"Where Fullerton becomes Grand","prompt":"Take a photo at Rutherford Sayre Park, two blocks south of where Fullerton Ave changes its name to Grand Ave.","difficulty":1,"restriction":null},
+      {"id":"montclare-2","type":"trivia","title":"Named for New Jersey","prompt":"Verify the New Jersey town that Montclare was named after by a 19th-century developer.","difficulty":1,"restriction":null},
+      {"id":"montclare-3","type":"find","title":"Tudor on Grand","prompt":"Find and photograph one of the Tudor-style houses built along the Grand Ave streetcar corridor.","difficulty":2,"restriction":null}
+    ],
+    "19": [
+      {"id":"belmont-cragin-1","type":"photo","title":"56 acres of Riis","prompt":"Take a photo at Riis Park, the 56-acre park named for muckraker journalist Jacob Riis.","difficulty":1,"restriction":null},
+      {"id":"belmont-cragin-2","type":"find","title":"Hanson Park stadium","prompt":"Find the sports stadium at Hanson Park, the CPS-owned park named for a farming family.","difficulty":2,"restriction":null},
+      {"id":"belmont-cragin-3","type":"physical","title":"Brickyard run","prompt":"Run a full lap around the perimeter of the Brickyard shopping center's parking lot.","difficulty":3,"restriction":"No stopping mid-lap"}
+    ],
+    "20": [
+      {"id":"hermosa-1","type":"photo","title":"Ahlschlager's fieldhouse","prompt":"Take a photo of the 1928 brick Kelvyn Park fieldhouse designed by Walter Ahlschlager.","difficulty":2,"restriction":null},
+      {"id":"hermosa-2","type":"trivia","title":"First streetcar","prompt":"Standing on Armitage Ave, verify the year the first streetcars appeared on it (hint: 1895).","difficulty":1,"restriction":null},
+      {"id":"hermosa-3","type":"physical","title":"Loop the park","prompt":"Walk both of Kelvyn Park's interior walking paths end to end without backtracking.","difficulty":2,"restriction":null}
+    ],
+    "21": [
+      {"id":"avondale-1","type":"photo","title":"Jackowo's basilica","prompt":"Take a photo of St. Hyacinth Basilica, the heart of Avondale's Polish Village near George St and Lawndale Ave.","difficulty":2,"restriction":null},
+      {"id":"avondale-2","type":"find","title":"Polish sausage row","prompt":"Find a traditional Polish sausage shop or bakery along the Milwaukee Ave commercial strip in Jackowo.","difficulty":1,"restriction":null},
+      {"id":"avondale-3","type":"trivia","title":"Kosciuszko's namesake","prompt":"At Kosciuszko Park, verify the Polish patriot it honors and the decade it was built (1910s).","difficulty":2,"restriction":null}
+    ],
+    "22": [
+      {"id":"logan-square-1","type":"measure","title":"Forty-two feet","prompt":"At the Illinois Centennial Monument, estimate the column's height, then verify it's 42 feet plus a 10-foot eagle.","difficulty":2,"restriction":null},
+      {"id":"logan-square-2","type":"photo","title":"The eagle column","prompt":"Take a photo of the eagle atop the Illinois Centennial Monument where Milwaukee Ave meets Logan Blvd.","difficulty":1,"restriction":null},
+      {"id":"logan-square-3","type":"trivia","title":"A Greek echo","prompt":"At the monument's base, verify which Athenian colonnade the Doric column copies in size and proportion.","difficulty":2,"restriction":null}
+    ],
+    "23": [
+      {"id":"humboldt-park-1","type":"photo","title":"Steel Boricua Flags","prompt":"Take a photo standing under one of the two 59-foot steel Puerto Rican flag arches that bookend Paseo Boricua on Division St.","difficulty":1,"restriction":null},
+      {"id":"humboldt-park-2","type":"trivia","title":"Boathouse Year","prompt":"Find the Prairie-style Boathouse on the Humboldt Park lagoon and verify the year it was built (hint: 1900s).","difficulty":2,"restriction":null},
+      {"id":"humboldt-park-3","type":"find","title":"La Casita","prompt":"Locate La Casita de Don Pedro along Paseo Boricua, the small replica of a 1940s rural Puerto Rican home.","difficulty":2,"restriction":"No using GPS pin-drops; ask a local for directions"}
+    ],
+    "24": [
+      {"id":"west-town-1","type":"photo","title":"Coyote Tower","prompt":"Photograph the Flat Iron Arts Building at the six-corner Damen/North/Milwaukee junction in Wicker Park.","difficulty":1,"restriction":null},
+      {"id":"west-town-2","type":"find","title":"Polish Cathedral","prompt":"Find St. Stanislaus Kostka Church, the towering Polish parish near the Kennedy Expressway in West Town.","difficulty":2,"restriction":null},
+      {"id":"west-town-3","type":"physical","title":"Blue Line Sprint","prompt":"Walk between the Damen and Division Blue Line stops; time how long the trip takes you.","difficulty":2,"restriction":"Must travel the whole way on foot"}
+    ],
+    "25": [
+      {"id":"austin-1","type":"photo","title":"Art Deco Bank","prompt":"Photograph the terracotta facade of the landmark Laramie State Bank Building at 5200 W. Chicago Ave.","difficulty":1,"restriction":null},
+      {"id":"austin-2","type":"find","title":"Jensen Refectory","prompt":"In Jens Jensen's Columbus Park, find the Spanish-style Refectory overlooking the lagoon.","difficulty":2,"restriction":null},
+      {"id":"austin-3","type":"measure","title":"Park Waterfall","prompt":"Estimate then verify the height of the prairie-river waterfall feature in Columbus Park.","difficulty":3,"restriction":null}
+    ],
+    "26": [
+      {"id":"west-garfield-park-1","type":"photo","title":"Golden Dome","prompt":"Photograph the Garfield Park 'Gold Dome' Fieldhouse on W. Madison St. with its gilded copper dome.","difficulty":1,"restriction":null},
+      {"id":"west-garfield-park-2","type":"trivia","title":"Pulaski Stop","prompt":"At the Pulaski Green Line station, verify whether the line runs elevated or at grade through West Garfield Park.","difficulty":2,"restriction":null},
+      {"id":"west-garfield-park-3","type":"find","title":"Madison & Pulaski","prompt":"Locate the historic Madison/Pulaski commercial six-corner, once the West Side's busiest shopping district.","difficulty":2,"restriction":null}
+    ],
+    "27": [
+      {"id":"east-garfield-park-1","type":"photo","title":"Glass Houses","prompt":"Take a photo inside the Garfield Park Conservatory's Palm House at 300 N. Central Park Ave.","difficulty":1,"restriction":null},
+      {"id":"east-garfield-park-2","type":"measure","title":"Count the Houses","prompt":"Count and verify how many distinct display greenhouses make up the Garfield Park Conservatory.","difficulty":2,"restriction":null},
+      {"id":"east-garfield-park-3","type":"riddle","title":"Lagoon Boats","prompt":"'I'm a 1907 Prairie boathouse on a West Side lagoon, named for a slain president.' Find me.","difficulty":3,"restriction":null}
+    ],
+    "28": [
+      {"id":"near-west-side-1","type":"find","title":"Maxwell Market","prompt":"Locate the Maxwell & Halsted St. corner, the original home of the historic Maxwell Street Market near UIC.","difficulty":2,"restriction":null},
+      {"id":"near-west-side-2","type":"photo","title":"Hull-House","prompt":"Photograph the Jane Addams Hull-House Museum on the UIC campus, the famed settlement house.","difficulty":1,"restriction":null},
+      {"id":"near-west-side-3","type":"trivia","title":"Greektown Sign","prompt":"On Halsted St. in Greektown, verify what the neighborhood gateway signage reads.","difficulty":2,"restriction":null}
+    ],
+    "29": [
+      {"id":"north-lawndale-1","type":"photo","title":"Original Sears Tower","prompt":"Photograph the original Sears Tower (Nichols Tower) at the Homan Square campus on S. Homan Ave.","difficulty":2,"restriction":null},
+      {"id":"north-lawndale-2","type":"find","title":"Stone Temple","prompt":"Find Stone Temple Baptist Church on S. Douglas Blvd., a civil-rights-era landmark in North Lawndale.","difficulty":2,"restriction":null},
+      {"id":"north-lawndale-3","type":"trivia","title":"Douglass Park","prompt":"At Douglass Park, verify which festival is held there each summer on the West Side.","difficulty":1,"restriction":null}
+    ],
+    "30": [
+      {"id":"south-lawndale-1","type":"photo","title":"Little Village Arch","prompt":"Photograph the Little Village welcome arch over 26th St. at Albany Ave., 'Bienvenidos a Little Village.'","difficulty":1,"restriction":null},
+      {"id":"south-lawndale-2","type":"find","title":"26th Street Strip","prompt":"Find the bustling 26th Street commercial corridor, one of Chicago's highest-grossing shopping districts.","difficulty":2,"restriction":null},
+      {"id":"south-lawndale-3","type":"measure","title":"Jail Walls","prompt":"Walk the perimeter of the Cook County Jail complex on S. California Ave.; estimate then verify how many blocks long one side runs.","difficulty":3,"restriction":null}
+    ],
+    "31": [
+      {"id":"lower-west-side-1","type":"photo","title":"Mexican Art Museum","prompt":"Photograph the entrance of the National Museum of Mexican Art in Harrison Park, 1852 W. 19th St., Pilsen.","difficulty":1,"restriction":null},
+      {"id":"lower-west-side-2","type":"find","title":"Pilsen Murals","prompt":"Find a mural along 16th St. or the 18th St. corridor in Pilsen and identify its artist or theme.","difficulty":2,"restriction":null},
+      {"id":"lower-west-side-3","type":"trivia","title":"18th St. Station","prompt":"At the 18th St. Pink Line station, verify what the platform's tiled artwork depicts.","difficulty":2,"restriction":null}
+    ],
+    "32": [
+      {"id":"loop-1","type":"photo","title":"The Bean","prompt":"Take a photo of your reflection in Cloud Gate ('The Bean') in Millennium Park.","difficulty":1,"restriction":"Your whole crew must appear in the reflection"},
+      {"id":"loop-2","type":"measure","title":"Lion Count","prompt":"At the Art Institute on S. Michigan Ave., count the bronze lions guarding the entrance and verify when they were installed.","difficulty":1,"restriction":null},
+      {"id":"loop-3","type":"riddle","title":"Picasso Riddle","prompt":"'I'm a 50-foot rusted steel beast in a downtown plaza, untitled and gifted in 1967.' Find me.","difficulty":2,"restriction":null}
+    ],
+    "33": [
+      {"id":"near-south-side-1","type":"photo","title":"Museum Campus","prompt":"Photograph the classical north facade of the Field Museum on the Museum Campus.","difficulty":1,"restriction":null},
+      {"id":"near-south-side-2","type":"find","title":"Glessner House","prompt":"In the Prairie Avenue Historic District, find the Glessner House, the H.H. Richardson-designed mansion.","difficulty":2,"restriction":null},
+      {"id":"near-south-side-3","type":"physical","title":"Soldier Field Lap","prompt":"Jog one full lap around the exterior of Soldier Field's colonnades along the lakefront.","difficulty":3,"restriction":"No stopping to rest"}
+    ],
+    "34": [
+      {"id":"armour-square-1","type":"photo","title":"Sox Pride","prompt":"Take a photo at the main gate of Guaranteed Rate Field (35th & Shields), home of the Chicago White Sox.","difficulty":1,"restriction":null},
+      {"id":"armour-square-2","type":"find","title":"Chinatown Gate","prompt":"Find the ornate Chinatown Gate at Wentworth & Cermak and photograph the Chinese characters on it.","difficulty":2,"restriction":null},
+      {"id":"armour-square-3","type":"measure","title":"Zodiac Count","prompt":"At Chinatown's Zodiac Square on Cermak, count the bronze animal statues, then verify there are 12.","difficulty":2,"restriction":"No phone for the count"}
+    ],
+    "35": [
+      {"id":"douglas-1","type":"measure","title":"Tomb Height","prompt":"Estimate the height of the Stephen A. Douglas Tomb (636 E 35th St), then verify it stands 96 feet tall.","difficulty":2,"restriction":null},
+      {"id":"douglas-2","type":"find","title":"Insurance Pioneer","prompt":"Find the Supreme Life Building at 3501 S King Dr, the first Black-owned insurance HQ in the North, now the Bronzeville visitor center.","difficulty":2,"restriction":null},
+      {"id":"douglas-3","type":"photo","title":"Campus Modernism","prompt":"Take a photo of a Mies van der Rohe steel-and-glass building on the IIT campus in Douglas.","difficulty":1,"restriction":null}
+    ],
+    "36": [
+      {"id":"oakland-1","type":"photo","title":"Lakefront Sand","prompt":"Take a photo standing on the sand at Oakwood/41st Street Beach, Oakland's Lake Michigan shoreline.","difficulty":1,"restriction":null},
+      {"id":"oakland-2","type":"trivia","title":"Wright's Center","prompt":"At the Abraham Lincoln Center (700 E Oakwood Blvd), verify it was designed in collaboration with architect Frank Lloyd Wright.","difficulty":2,"restriction":null},
+      {"id":"oakland-3","type":"find","title":"Boston Echo","prompt":"Find Monument Baptist Church on Oakwood Blvd, modeled after Boston's Trinity Church, and photograph its facade.","difficulty":2,"restriction":null}
+    ],
+    "37": [
+      {"id":"fuller-park-1","type":"find","title":"Burnham Fieldhouse","prompt":"Find the historic fieldhouse at Fuller Park (331 W 45th St), designed by Burnham & Bennett with Norton murals.","difficulty":2,"restriction":null},
+      {"id":"fuller-park-2","type":"photo","title":"Urban Nature","prompt":"Take a photo at Eden Place Nature Center, a 3-acre urban ecology site reclaimed from a brownfield in Fuller Park.","difficulty":2,"restriction":null},
+      {"id":"fuller-park-3","type":"trivia","title":"Namesake Justice","prompt":"Verify that Fuller Park is named for Melville W. Fuller, who served as U.S. Chief Justice from 1888 to 1910.","difficulty":1,"restriction":null}
+    ],
+    "38": [
+      {"id":"grand-boulevard-1","type":"photo","title":"Mayor's Stage","prompt":"Take a photo at the Harold Washington Cultural Center, 4701 S King Dr, named for Chicago's first Black mayor.","difficulty":1,"restriction":null},
+      {"id":"grand-boulevard-2","type":"riddle","title":"The Wide Way","prompt":"Solve: 'Once homes of stockyard barons and the Marx Brothers, this grass-medianed avenue gives the area its name.' Stand on it.","difficulty":2,"restriction":null},
+      {"id":"grand-boulevard-3","type":"find","title":"47th & Commerce","prompt":"Find the historic 47th Street commercial corridor, the old heart of Black-owned Bronzeville business, and photograph a 1920s storefront.","difficulty":2,"restriction":null}
+    ],
+    "39": [
+      {"id":"kenwood-1","type":"find","title":"Minaret Synagogue","prompt":"Find K.A.M. Isaiah Israel temple, Chicago's oldest Jewish congregation, with its unusual Byzantine minaret.","difficulty":2,"restriction":null},
+      {"id":"kenwood-2","type":"photo","title":"Sears Mansion","prompt":"Take a photo of the Rosenwald Mansion (4901 S Ellis), built in 1902 by the founder of Sears, Roebuck.","difficulty":2,"restriction":null},
+      {"id":"kenwood-3","type":"trivia","title":"Fountain Donor","prompt":"At the Francis M. Drexel Memorial Fountain, verify it honors the banker namesake of Drexel Boulevard.","difficulty":1,"restriction":null}
+    ],
+    "40": [
+      {"id":"washington-park-1","type":"photo","title":"Father Time","prompt":"Take a photo at Lorado Taft's Fountain of Time (59th & Cottage Grove), showing the 100 figures and Father Time.","difficulty":1,"restriction":null},
+      {"id":"washington-park-2","type":"find","title":"DuSable Doors","prompt":"Find the DuSable Black History Museum in Washington Park, one of the nation's largest African American museums.","difficulty":1,"restriction":null},
+      {"id":"washington-park-3","type":"trivia","title":"Lincoln's Sculptor","prompt":"At the George Washington statue (51st & MLK Dr), verify sculptor Daniel Chester French also made the seated Lincoln Memorial figure.","difficulty":2,"restriction":null}
+    ],
+    "41": [
+      {"id":"hyde-park-1","type":"photo","title":"Prairie Icon","prompt":"Take a photo of Frank Lloyd Wright's Robie House (5757 S Woodlawn), a UNESCO World Heritage Prairie-style landmark.","difficulty":1,"restriction":null},
+      {"id":"hyde-park-2","type":"physical","title":"Point Walk","prompt":"Walk out to the tip of Promontory Point on the Burnham Park peninsula and photograph the downtown skyline.","difficulty":2,"restriction":null},
+      {"id":"hyde-park-3","type":"trivia","title":"Fair Survivor","prompt":"At the Museum of Science and Industry, verify the building was the 1893 World's Fair Palace of Fine Arts.","difficulty":1,"restriction":null}
+    ],
+    "42": [
+      {"id":"woodlawn-1","type":"photo","title":"Obama Center","prompt":"Take a photo at the Obama Presidential Center campus, between 60th and 63rd along Stony Island Ave in Woodlawn.","difficulty":1,"restriction":null},
+      {"id":"woodlawn-2","type":"find","title":"Osaka Garden","prompt":"Find the Osaka Japanese Garden on Wooded Island in Jackson Park and photograph the moon bridge or lantern.","difficulty":2,"restriction":null},
+      {"id":"woodlawn-3","type":"riddle","title":"1893 Ground","prompt":"Solve: 'Olmsted shaped me; in 1893 the world came to my fairgrounds.' Reach this 550-acre park and photograph a lagoon.","difficulty":2,"restriction":null}
+    ],
+    "43": [
+      {"id":"south-shore-1","type":"photo","title":"Country Club Grandeur","prompt":"Take a photo in the solarium or formal hall of the South Shore Cultural Center, a 1916 Chicago Landmark.","difficulty":2,"restriction":null},
+      {"id":"south-shore-2","type":"physical","title":"Rainbow Pier","prompt":"Walk the full length of the pier at Rainbow Beach, one of Chicago's largest lakefront beaches.","difficulty":2,"restriction":null},
+      {"id":"south-shore-3","type":"find","title":"Highlands Grid","prompt":"Find the Jackson Park Highlands historic district (67th-71st, Cregier-Jeffery) and photograph a landmark mansion.","difficulty":2,"restriction":null}
+    ],
+    "44": [
+      {"id":"chatham-1","type":"physical","title":"Cole Court","prompt":"Shoot a basket on the legendary court at Nat King Cole Park (361 E 85th St), open 50+ years.","difficulty":2,"restriction":"Make it on the first try"},
+      {"id":"chatham-2","type":"find","title":"Terra Cotta Row","prompt":"Find a terra-cotta-clad commercial building in the Chatham district along 79th or Cottage Grove and photograph its facade.","difficulty":2,"restriction":null},
+      {"id":"chatham-3","type":"trivia","title":"Library Namesake","prompt":"At the Whitney M. Young, Jr. branch library on 79th St, verify Young led the National Urban League.","difficulty":1,"restriction":null}
+    ],
+    "45": [
+      {"id":"avalon-park-1","type":"photo","title":"Bungalow Row","prompt":"Take a photo of a classic brick bungalow inside the Avalon Park Bungalow Historic District (around 79th-83rd between Woodlawn and Harper).","difficulty":1,"restriction":null},
+      {"id":"avalon-park-2","type":"find","title":"Find the Pool","prompt":"Locate the outdoor swimming pool at Avalon Park (1215 E 83rd St) and stand at its edge.","difficulty":2,"restriction":null},
+      {"id":"avalon-park-3","type":"trivia","title":"Skyway Overhead","prompt":"Find where the Chicago Skyway cuts through the area. What toll road does the Skyway connect Chicago to? Verify on a sign or map.","difficulty":2,"restriction":"No phone maps until you've guessed"}
+    ],
+    "46": [
+      {"id":"south-chicago-1","type":"physical","title":"Climb the Ore Wall","prompt":"At Steelworkers Park, reach the base of the historic ore wall (former South Works) and touch the climbing-wall section.","difficulty":3,"restriction":null},
+      {"id":"south-chicago-2","type":"photo","title":"Calumet Field House","prompt":"Photograph the landmark Calumet Park field house on the lakefront at the area's northeast edge.","difficulty":1,"restriction":null},
+      {"id":"south-chicago-3","type":"find","title":"Guadalupe Memorial","prompt":"Find Our Lady of Guadalupe Church at 3200 E 91st St and locate the memorial honoring fallen local soldiers.","difficulty":2,"restriction":null}
+    ],
+    "47": [
+      {"id":"burnside-1","type":"trivia","title":"Smallest of 77","prompt":"Burnside is Chicago's smallest community area, boxed in by three railroads. Name one railroad line forming its border. Verify on-site.","difficulty":2,"restriction":null},
+      {"id":"burnside-2","type":"photo","title":"Chesterfield Platform","prompt":"Take a photo from the 91st St/Chesterfield Metra Electric platform, the main rail gateway into Burnside.","difficulty":1,"restriction":null},
+      {"id":"burnside-3","type":"riddle","title":"General's Whiskers","prompt":"This area shares its name with a Civil War general whose facial hair gave us a word. Stand on the street that bears that name.","difficulty":2,"restriction":null}
+    ],
+    "48": [
+      {"id":"calumet-heights-1","type":"riddle","title":"The Island That Wasn't","prompt":"A glacial ridge here once looked like an island in a prairie sea, lending its name to a long avenue. Stand on that avenue.","difficulty":1,"restriction":null},
+      {"id":"calumet-heights-2","type":"photo","title":"Pill Hill Mod","prompt":"In the Pill Hill subdivision (91st-93rd, Stony Island to Jeffery), photograph a mid-century modern home.","difficulty":2,"restriction":null},
+      {"id":"calumet-heights-3","type":"trivia","title":"Doctors' Hill","prompt":"Pill Hill got its nickname from professionals at a nearby hospital. Name that hospital (now Advocate Trinity). Verify locally.","difficulty":2,"restriction":null}
+    ],
+    "49": [
+      {"id":"roseland-1","type":"photo","title":"Palmer Park","prompt":"Photograph the field house or grounds of Palmer Park at 201 E 111th St.","difficulty":1,"restriction":null},
+      {"id":"roseland-2","type":"find","title":"Pumping Station","prompt":"Locate the Roseland Pumping Station at 351 W 104th St, one of Chicago's water pressure stations.","difficulty":2,"restriction":null},
+      {"id":"roseland-3","type":"measure","title":"Michigan Ave Storefronts","prompt":"Walk the historic Michigan Avenue commercial district and estimate, then count, the storefronts in one full block.","difficulty":2,"restriction":null}
+    ],
+    "50": [
+      {"id":"pullman-1","type":"photo","title":"Clock Tower","prompt":"Take a photo of the Pullman Administration Clock Tower Building, heart of the Pullman National Monument.","difficulty":1,"restriction":null},
+      {"id":"pullman-2","type":"trivia","title":"Named for a Daughter","prompt":"Find Hotel Florence. Whose daughter was it named for? Verify on a plaque or at the visitor center.","difficulty":2,"restriction":null},
+      {"id":"pullman-3","type":"find","title":"Worker's Rowhouse","prompt":"Locate an original Pullman worker's rowhome among the planned company-town housing.","difficulty":2,"restriction":null}
+    ],
+    "51": [
+      {"id":"south-deering-1","type":"photo","title":"Trumbull Green","prompt":"Photograph the field house or grounds of Trumbull Park at 2400 E 105th St.","difficulty":1,"restriction":null},
+      {"id":"south-deering-2","type":"find","title":"Wisconsin Steel Site","prompt":"Find the former Wisconsin Steel works site along Torrence Ave (south of 106th), which closed abruptly in 1980.","difficulty":3,"restriction":null},
+      {"id":"south-deering-3","type":"trivia","title":"Inland Lake","prompt":"Lake Calumet sprawls across this area's interior. Is it one of the few INLAND lakes within city limits? Verify on a map or sign.","difficulty":2,"restriction":null}
+    ],
+    "52": [
+      {"id":"east-side-1","type":"photo","title":"Bascule Bridge","prompt":"Take a photo of the 1927 100th Street bascule bridge over the Calumet River.","difficulty":2,"restriction":null},
+      {"id":"east-side-2","type":"find","title":"State Line Marker","prompt":"Reach State Line Road (4100 E), the Illinois-Indiana border, and find a marker or sign proving you're at the edge of Chicago.","difficulty":3,"restriction":null},
+      {"id":"east-side-3","type":"physical","title":"Eggers Grove Loop","prompt":"At Eggers Grove (112th & Ave E), walk a full loop on a trail through the wooded ridges and marsh.","difficulty":2,"restriction":null}
+    ],
+    "53": [
+      {"id":"west-pullman-1","type":"photo","title":"West Pullman Park","prompt":"Photograph the field house at West Pullman Park, 401 W 123rd St.","difficulty":1,"restriction":null},
+      {"id":"west-pullman-2","type":"find","title":"Halsted Platform","prompt":"Find the West Pullman Metra Electric station, set over Halsted St between 120th and 122nd.","difficulty":2,"restriction":null},
+      {"id":"west-pullman-3","type":"trivia","title":"Stewart Ridge","prompt":"The upper-class Stewart Ridge subdivision (~121st & Halsted) was platted around 1915. Stand in it and verify the name on a sign or marker.","difficulty":2,"restriction":null}
+    ],
+    "54": [
+      {"id":"riverdale-1","type":"photo","title":"Altgeld Gardens","prompt":"Take a photo within the Altgeld Gardens development, a birthplace of the environmental justice movement.","difficulty":2,"restriction":null},
+      {"id":"riverdale-2","type":"find","title":"Flatfoot Lake","prompt":"At Beaubien Woods, locate Flatfoot Lake and the Little Calumet River access point.","difficulty":2,"restriction":null},
+      {"id":"riverdale-3","type":"riddle","title":"French Canadian's Woods","prompt":"This forest preserve is named for a French-Canadian who reached Chicago in 1826. Stand at its entrance.","difficulty":2,"restriction":null}
+    ],
+    "55": [
+      {"id":"hegewisch-1","type":"photo","title":"Wolf Lake","prompt":"Photograph Wolf Lake from the shore within the William W. Powers State Recreation Area.","difficulty":1,"restriction":null},
+      {"id":"hegewisch-2","type":"find","title":"Easternmost Stop","prompt":"Find the Hegewisch South Shore Line station, the line's easternmost stop in Illinois.","difficulty":2,"restriction":null},
+      {"id":"hegewisch-3","type":"physical","title":"To the State Line","prompt":"From Mann Park, travel east on foot to reach the Illinois-Indiana state line on Hegewisch's eastern edge.","difficulty":3,"restriction":"On foot only"}
+    ],
+    "56": [
+      {"id":"garfield-ridge-1","type":"photo","title":"Plane spotter","prompt":"Take a photo of a plane taking off or landing at Midway Airport, whose north half sits in Garfield Ridge.","difficulty":2,"restriction":null},
+      {"id":"garfield-ridge-2","type":"find","title":"Two Holy Martyrs","prompt":"Find St. Symphorosa Church at 6135 S. Austin Ave. and photograph its main entrance sign.","difficulty":2,"restriction":null},
+      {"id":"garfield-ridge-3","type":"trivia","title":"Ridge roots","prompt":"At Archer Avenue, confirm the road's name origin: it follows an old Native American trail. Verify aloud to a teammate.","difficulty":1,"restriction":null}
+    ],
+    "57": [
+      {"id":"archer-heights-1","type":"photo","title":"Orange Line stop","prompt":"Photograph the CTA Orange Line Pulaski station entrance at Pulaski Rd. and 51st St.","difficulty":1,"restriction":null},
+      {"id":"archer-heights-2","type":"find","title":"Highlander hall","prompt":"Find the Polish Highlanders restaurant on Archer Ave. and photograph its facade.","difficulty":2,"restriction":null},
+      {"id":"archer-heights-3","type":"physical","title":"Lap the park","prompt":"Run or briskly walk one full loop around Archer Park's athletic field, then catch your breath.","difficulty":2,"restriction":"no stopping mid-lap"}
+    ],
+    "58": [
+      {"id":"brighton-park-1","type":"find","title":"Kelly diamond","prompt":"Find a baseball diamond inside Kelly Park and stand on the pitcher's mound for a photo.","difficulty":1,"restriction":null},
+      {"id":"brighton-park-2","type":"measure","title":"Avenue angle","prompt":"Standing on Archer Ave., estimate then verify how many degrees diagonal it runs off the street grid.","difficulty":2,"restriction":null},
+      {"id":"brighton-park-3","type":"photo","title":"Polish main street","prompt":"Photograph a family-run business storefront along Archer Ave. with a visible hand-painted or vintage sign.","difficulty":2,"restriction":null}
+    ],
+    "59": [
+      {"id":"mckinley-park-1","type":"photo","title":"Lagoon view","prompt":"Take a photo standing on the pier or boardwalk over McKinley Park's lagoon.","difficulty":1,"restriction":null},
+      {"id":"mckinley-park-2","type":"find","title":"Fishing stations","prompt":"Find the fishing stations ringing the McKinley Park pond and photograph one with the water behind you.","difficulty":2,"restriction":null},
+      {"id":"mckinley-park-3","type":"riddle","title":"Where rails meet Archer","prompt":"Solve: 'Orange runs where 35th meets a diagonal road.' Reach the named CTA station and photograph the platform sign.","difficulty":2,"restriction":null}
+    ],
+    "60": [
+      {"id":"bridgeport-1","type":"photo","title":"Sox grounds","prompt":"Take a photo outside Guaranteed Rate Field (333 W. 35th St.), home of the White Sox.","difficulty":1,"restriction":null},
+      {"id":"bridgeport-2","type":"trivia","title":"Scoreboard legacy","prompt":"At the ballpark, verify whose 'Exploding Scoreboard' the center-field board replicates. Answer: Bill Veeck.","difficulty":2,"restriction":null},
+      {"id":"bridgeport-3","type":"find","title":"Old home plate","prompt":"Find the marker for Old Comiskey Park's home plate in the parking lot across 35th St. and photograph it.","difficulty":3,"restriction":null}
+    ],
+    "61": [
+      {"id":"new-city-1","type":"photo","title":"Stockyards gate","prompt":"Photograph the historic Union Stock Yard Gate on Exchange Ave. at Peoria St.","difficulty":2,"restriction":null},
+      {"id":"new-city-2","type":"trivia","title":"Burnham's father-in-law","prompt":"At Sherman Park, verify who the park is named for: John B. Sherman, a Stock Yards founder.","difficulty":1,"restriction":null},
+      {"id":"new-city-3","type":"find","title":"Olmsted lagoon","prompt":"Find the lagoon that loops through Olmsted-designed Sherman Park and photograph a footbridge over it.","difficulty":2,"restriction":null}
+    ],
+    "62": [
+      {"id":"west-elsdon-1","type":"find","title":"Hancock magnet","prompt":"Find John Hancock College Prep (between 55th–56th, Komensky to Karlov) and photograph its name sign.","difficulty":2,"restriction":null},
+      {"id":"west-elsdon-2","type":"photo","title":"Pasteur green","prompt":"Take a photo on the sports field at Pasteur Park.","difficulty":1,"restriction":null},
+      {"id":"west-elsdon-3","type":"riddle","title":"Orange to the Loop","prompt":"Solve: 'Ride me 11 miles northeast from this road to reach downtown.' Reach the Orange Line Pulaski stop and photograph it.","difficulty":2,"restriction":null}
+    ],
+    "63": [
+      {"id":"gage-park-1","type":"photo","title":"55th and Western","prompt":"Photograph the Gage Park fieldhouse at 2411 W. 55th St.","difficulty":1,"restriction":null},
+      {"id":"gage-park-2","type":"find","title":"Lea's mural","prompt":"Find the 1931 Tom Lea auditorium mural of pioneers looking westward inside the Gage Park fieldhouse.","difficulty":3,"restriction":null},
+      {"id":"gage-park-3","type":"physical","title":"Track circuit","prompt":"Complete one full lap of the paved track at Gage Park without walking.","difficulty":2,"restriction":"jog the whole lap"}
+    ],
+    "64": [
+      {"id":"clearing-1","type":"photo","title":"Southern runways","prompt":"Take a photo near Midway Airport's southern edge, the half that sits in Clearing.","difficulty":2,"restriction":null},
+      {"id":"clearing-2","type":"find","title":"Hale's pool","prompt":"Find Hale Park at 61st and Melvina and photograph its fieldhouse or outdoor pool.","difficulty":2,"restriction":null},
+      {"id":"clearing-3","type":"trivia","title":"Why 'Clearing'?","prompt":"On 63rd St., verify the neighborhood's name origin: goods were 'cleared' through its rail and transit yards.","difficulty":1,"restriction":null}
+    ],
+    "65": [
+      {"id":"west-lawn-1","type":"photo","title":"Lithuanian culture","prompt":"Photograph the Balzekas Museum of Lithuanian Culture at 6500 S. Pulaski Rd.","difficulty":1,"restriction":null},
+      {"id":"west-lawn-2","type":"measure","title":"Mall count","prompt":"At Ford City Mall (76th & Cicero), estimate then verify how many stores it holds: it has more than 135.","difficulty":2,"restriction":null},
+      {"id":"west-lawn-3","type":"physical","title":"Mall mile","prompt":"Walk the full interior length of Ford City Mall end to end and photograph both anchor ends.","difficulty":2,"restriction":null}
+    ],
+    "66": [
+      {"id":"chicago-lawn-1","type":"find","title":"Aviators' monument","prompt":"Find the Darius–Girėnas monument near 67th and California in Marquette Park and photograph it.","difficulty":2,"restriction":null},
+      {"id":"chicago-lawn-2","type":"photo","title":"Lagoon footbridge","prompt":"Take a photo on a footbridge over the Marquette Park lagoon.","difficulty":1,"restriction":null},
+      {"id":"chicago-lawn-3","type":"trivia","title":"Named for a priest","prompt":"At Marquette Park, verify the namesake: Father Jacques Marquette, the 17th-century explorer-priest.","difficulty":1,"restriction":null}
+    ],
+    "67": [
+      {"id":"west-englewood-1","type":"find","title":"Spire Spotting","prompt":"At Ashland/63rd, the Green Line's Ashland-branch terminal, find the soaring station spire topped with the retro 1960s CTA 'meatball' logo.","difficulty":1,"restriction":null},
+      {"id":"west-englewood-2","type":"photo","title":"Hamilton Park Hop","prompt":"Take a photo of yourself at Hamilton Park, home to the annual Englewood Jazz Festival.","difficulty":2,"restriction":null},
+      {"id":"west-englewood-3","type":"trivia","title":"Which Branch?","prompt":"Stand at Ashland/63rd and confirm: which CTA line uses this as its Ashland-branch terminus? Verify on station signage.","difficulty":1,"restriction":"Answer before boarding any train"}
+    ],
+    "68": [
+      {"id":"englewood-1","type":"photo","title":"Campus Stop","prompt":"Photograph the Halsted Green Line stop, which sits in the heart of Kennedy-King College's campus at 63rd & Halsted.","difficulty":1,"restriction":null},
+      {"id":"englewood-2","type":"trivia","title":"Culinary Roots","prompt":"At Kennedy-King College (6301 S Halsted), verify the name of the culinary institute housed on campus.","difficulty":2,"restriction":null},
+      {"id":"englewood-3","type":"measure","title":"Six Buildings","prompt":"Estimate, then verify, how many separate buildings make up the 40-acre Kennedy-King College campus.","difficulty":2,"restriction":null}
+    ],
+    "69": [
+      {"id":"greater-grand-crossing-1","type":"photo","title":"Park Portrait","prompt":"Take a photo at Grand Crossing Park (7655 S Ingleside Ave), a South Park Commission park opened in 1915.","difficulty":1,"restriction":null},
+      {"id":"greater-grand-crossing-2","type":"trivia","title":"Deadly Crossing","prompt":"At the 75th St/Grand Crossing Metra station, learn what 1853 railroad-feud disaster gave the neighborhood its name.","difficulty":2,"restriction":null},
+      {"id":"greater-grand-crossing-3","type":"find","title":"Resting Place","prompt":"Find the main gate of Oak Woods Cemetery, established 1854, one of the area's oldest landmarks.","difficulty":2,"restriction":null}
+    ],
+    "70": [
+      {"id":"ashburn-1","type":"photo","title":"Diamond Count","prompt":"Photograph yourself standing on one of the six baseball diamonds at Hayes Park.","difficulty":2,"restriction":null},
+      {"id":"ashburn-2","type":"trivia","title":"Wartime Wings","prompt":"At the Ford City site (7601 S Cicero), verify what aircraft-related factory occupied this land during World War II.","difficulty":2,"restriction":null},
+      {"id":"ashburn-3","type":"find","title":"Green Escape","prompt":"Find the entrance to Durkin Park, the neighborhood green space off Ashburn's residential streets.","difficulty":1,"restriction":null}
+    ],
+    "71": [
+      {"id":"auburn-gresham-1","type":"find","title":"Parish Center","prompt":"Find St. Sabina Catholic Church, the spiritual and social heart of Auburn Gresham.","difficulty":2,"restriction":null},
+      {"id":"auburn-gresham-2","type":"photo","title":"Lagoon Lap","prompt":"Take a photo beside the curving lagoon at Auburn Park, on land once owned by Chicago's first mayor.","difficulty":2,"restriction":null},
+      {"id":"auburn-gresham-3","type":"trivia","title":"Justice's Name","prompt":"At W 75th & S Racine, confirm which U.S. Supreme Court justice the local Chicago Public Library branch is named after.","difficulty":1,"restriction":null}
+    ],
+    "72": [
+      {"id":"beverly-1","type":"photo","title":"Chicago's Castle","prompt":"Photograph the Givins Beverly Castle on Longwood Drive, Chicago's last standing castle, now Beverly Unitarian Church.","difficulty":1,"restriction":null},
+      {"id":"beverly-2","type":"trivia","title":"Limestone Legend","prompt":"At the Givins Castle, verify what year it was built and that its limestone came from a quarry near Joliet.","difficulty":2,"restriction":null},
+      {"id":"beverly-3","type":"physical","title":"Ride the Ridge","prompt":"Walk the length of the Longwood Drive District along the Blue Island Ridge, the geographic spine of Beverly.","difficulty":3,"restriction":"On foot only"}
+    ],
+    "73": [
+      {"id":"washington-heights-1","type":"find","title":"Rock Island Stop","prompt":"Find the 103rd Street/Washington Heights Metra station on the Rock Island District's Beverly Branch.","difficulty":1,"restriction":null},
+      {"id":"washington-heights-2","type":"measure","title":"Miles to LaSalle","prompt":"At the Washington Heights Metra station, estimate then verify how many rail miles it sits from LaSalle Street Station.","difficulty":2,"restriction":null},
+      {"id":"washington-heights-3","type":"photo","title":"Platform Pose","prompt":"Take a photo on the platform of a Rock Island Beverly Branch station within Washington Heights.","difficulty":1,"restriction":null}
+    ],
+    "74": [
+      {"id":"mount-greenwood-1","type":"find","title":"Eight Cemeteries","prompt":"Find the gate of Mount Greenwood Cemetery at 2900 W 111th St, the burial ground that gave the community its name.","difficulty":2,"restriction":null},
+      {"id":"mount-greenwood-2","type":"trivia","title":"Lithuanian Ground","prompt":"Near 111th St, verify which nearby cemetery is the only Lithuanian Catholic cemetery in Chicago.","difficulty":2,"restriction":null},
+      {"id":"mount-greenwood-3","type":"physical","title":"Park Pool Loop","prompt":"Walk a full loop on the paths of 50-acre Mount Greenwood Park, passing its pool and ball fields.","difficulty":2,"restriction":null}
+    ],
+    "75": [
+      {"id":"morgan-park-1","type":"photo","title":"Oldest Library","prompt":"Photograph the Walker Branch Library (111th & Hoyne), built 1890, the oldest structure owned by Chicago Public Library.","difficulty":1,"restriction":null},
+      {"id":"morgan-park-2","type":"trivia","title":"Romanesque Architect","prompt":"At Walker Branch, verify which architect designed it in the Richardson Romanesque style.","difficulty":2,"restriction":null},
+      {"id":"morgan-park-3","type":"find","title":"Hale Avenue Depot","prompt":"Find the 111th Street/Morgan Park Metra station (11046 S Hale Ave) on the Rock Island District Line.","difficulty":1,"restriction":null}
+    ],
+    "76": [
+      {"id":"ohare-1","type":"photo","title":"End of the Line","prompt":"Photograph the O'Hare CTA Blue Line terminal, the westernmost station of the entire Chicago 'L' system.","difficulty":2,"restriction":null},
+      {"id":"ohare-2","type":"trivia","title":"Loop Timing","prompt":"At the O'Hare Blue Line station, verify roughly how many minutes a train takes to reach the Loop.","difficulty":1,"restriction":null},
+      {"id":"ohare-3","type":"find","title":"Terminal 2 Tunnel","prompt":"Find the pedestrian tunnel connecting the Blue Line platform to Terminal 2's lower level.","difficulty":2,"restriction":null}
+    ],
+    "77": [
+      {"id":"edgewater-1","type":"photo","title":"Sunset Pink","prompt":"Photograph the 'sunset pink' Edgewater Beach Apartments at 5555 N Sheridan Road.","difficulty":1,"restriction":null},
+      {"id":"edgewater-2","type":"find","title":"Four Stops","prompt":"Find any one of Edgewater's four Red Line stations: Berwyn, Bryn Mawr, Thorndale, or Granville.","difficulty":1,"restriction":null},
+      {"id":"edgewater-3","type":"trivia","title":"Bryn Mawr Count","prompt":"On the Bryn Mawr Historic District stretch (Sheridan to Broadway), verify how many buildings the proposed landmark district includes.","difficulty":2,"restriction":null}
+    ]
+  }
+}

@@ -1,12 +1,15 @@
 // Headless balance-sweep CLI:  npm run sim -- [--games N] [--seed S] [--csv out.csv]
 // Plays N games (estimate travel provider) and prints aggregate balance stats.
 
-import { writeFileSync } from "node:fs";
+import { writeFileSync, mkdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import { loadBoard } from "../loadBoard.js";
 import { cloneConfig, DEFAULT_CONFIG } from "../config.js";
 import { estimateProvider } from "../travel/estimate.js";
 import { runGame, type Strategy } from "../headless.js";
 import { computeTelemetry, telemetryToCsvRow, CSV_HEADER, type Telemetry } from "../telemetry.js";
+import { buildDebugLog, formatDebugLogText } from "../debugLog.js";
 import type { AreaId } from "../types.js";
 
 function arg(name: string, fallback: string): string {
@@ -19,15 +22,23 @@ const baseSeed = Number(arg("seed", "1"));
 const csvPath = arg("csv", "");
 const stratA = arg("a", "greedy_value") as Strategy;
 const stratB = arg("b", "core_rush") as Strategy;
+const debug = !process.argv.includes("--no-debug"); // debug logs on by default
 
 const board = loadBoard();
 // Default spawns: opposite ends of the city so the AIs contest the middle.
 const spawns: Record<string, AreaId> = { A: 8 /* Near North */, B: 71 /* Auburn Gresham */ };
 
+// One timestamped run folder; every game drops a JSON + readable TXT debug log.
+const here = dirname(fileURLToPath(import.meta.url));
+const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+const logDir = join(here, "../../../logs", `sim-${stamp}`);
+if (debug) mkdirSync(logDir, { recursive: true });
+
 const rows: Telemetry[] = [];
 for (let g = 0; g < games; g++) {
   const config = cloneConfig(DEFAULT_CONFIG);
   config.game.seed = baseSeed + g;
+  const t0 = Date.now();
   const state = await runGame({
     config,
     board,
@@ -36,7 +47,19 @@ for (let g = 0; g < games; g++) {
     strategies: { A: stratA, B: stratB },
   });
   rows.push(computeTelemetry(state, board));
+
+  if (debug) {
+    const dbg = buildDebugLog(state, board, {
+      generatedAtReal: new Date().toISOString(),
+      realDurationMs: Date.now() - t0,
+      strategies: { A: stratA, B: stratB },
+    });
+    const base = join(logDir, `game-${String(g + 1).padStart(3, "0")}-seed${config.game.seed}`);
+    writeFileSync(`${base}.json`, JSON.stringify(dbg, null, 2));
+    writeFileSync(`${base}.txt`, formatDebugLogText(dbg));
+  }
 }
+if (debug) console.log(`\nDebug logs (${games} games) → ${logDir}`);
 
 // ---- aggregate report ----
 const wins: Record<string, number> = { A: 0, B: 0, tie: 0 };

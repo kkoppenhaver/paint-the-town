@@ -3,20 +3,43 @@
 // browsers can never disagree on the clock or ownership. Also serves board.json.
 
 import { createServer } from "node:http";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { WebSocketServer, type WebSocket } from "ws";
-import type { Board } from "@ptt/engine";
+import { formatDebugLogText, type Board } from "@ptt/engine";
 import { Room } from "./room.js";
 import type { ClientMessage, ServerMessage } from "./protocol.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const board: Board = JSON.parse(readFileSync(join(here, "../../data/board.json"), "utf8"));
+// Attach the per-neighborhood challenge decks (optional file; engine tolerates absence).
+try {
+  board.challenges = JSON.parse(readFileSync(join(here, "../../data/challenges.json"), "utf8")).byArea;
+} catch {
+  console.warn("challenges.json not found — claims will run without challenge text");
+}
 const PORT = Number(process.env.PORT ?? 8787);
 
 const rooms = new Map<string, Room>();
 const clients = new Map<WebSocket, string>(); // socket -> room id
+
+// Debug/audit logs for every live game (written on finish + on reset of a played game).
+const logDir = join(here, "../../logs");
+function writeRoomDebugLog(room: Room, reason: string): void {
+  const dbg = room.debugSnapshot({ generatedAtReal: new Date().toISOString() });
+  if (!dbg) return;
+  try {
+    mkdirSync(logDir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const base = join(logDir, `live-${stamp}-room-${room.id}-${reason}`);
+    writeFileSync(`${base}.json`, JSON.stringify(dbg, null, 2));
+    writeFileSync(`${base}.txt`, formatDebugLogText(dbg));
+    console.log(`debug log (${reason}) → ${base}.json`);
+  } catch (err) {
+    console.warn("failed to write debug log:", err);
+  }
+}
 
 function roomFor(id: string): Room {
   let r = rooms.get(id);
@@ -90,6 +113,7 @@ wss.on("connection", (sock) => {
           room.start();
           break;
         case "reset":
+          if (room.state) writeRoomDebugLog(room, "reset"); // audit the game being torn down
           room.reset();
           break;
         case "intent":
@@ -97,6 +121,12 @@ wss.on("connection", (sock) => {
           break;
       }
       broadcast(roomId);
+
+      // Capture a debug log the moment a game finishes (once per game).
+      if (room.phase === "finished" && !room.debugLogged) {
+        writeRoomDebugLog(room, "finish");
+        room.debugLogged = true;
+      }
     } catch (err) {
       send(sock, { type: "error", message: String(err instanceof Error ? err.message : err) });
     }

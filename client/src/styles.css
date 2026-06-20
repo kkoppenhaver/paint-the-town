@@ -95,6 +95,11 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
 .opp-tag { background: #2a3142; color: var(--muted); }
 .opp-status .spawn { color: var(--muted); }
 .panel-status { color: var(--muted); margin-bottom: 8px; min-height: 18px; }
+.challenge-card { background: #161d2e; border: 1px solid #2b3650; border-left: 3px solid #ffd166; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; }
+.ch-head { color: #ffd166; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+.ch-title { font-weight: 700; margin-bottom: 2px; }
+.ch-prompt { color: var(--text); font-size: 12px; }
+.ch-restrict { color: #fca5a5; font-size: 11px; margin-top: 4px; }
 .panel-score { display: flex; gap: 14px; margin-bottom: 8px; }
 .panel-actions { display: flex; flex-direction: column; gap: 6px; }
 .travel-row { display: flex; gap: 6px; } .travel-row select { flex: 1; }
