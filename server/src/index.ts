@@ -12,6 +12,12 @@ import { Room } from "./room.js";
 import type { ClientMessage, ServerMessage } from "./protocol.js";
 
 const here = dirname(fileURLToPath(import.meta.url));
+// Load server/.env (e.g. GOOGLE_MAPS_API_KEY) if present; no-op when it's absent.
+try {
+  process.loadEnvFile(join(here, "../.env"));
+} catch {
+  /* no .env file — fall back to the ambient environment */
+}
 const board: Board = JSON.parse(readFileSync(join(here, "../../data/board.json"), "utf8"));
 // Attach the per-neighborhood challenge decks (optional file; engine tolerates absence).
 try {
