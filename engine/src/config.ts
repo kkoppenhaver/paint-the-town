@@ -22,7 +22,7 @@ export const DEFAULT_CONFIG: Config = {
     retryPenaltyMin: 10,
   },
   pacing: {
-    decisionGameMinPerSec: 0.5, // slow creep while a team is deciding (gentle pressure)
+    decisionGameMinPerSec: 0.2, // slow creep while a team is deciding (gentle pressure)
     executionGameMinPerSec: 15, // fast-forward while both are committed
     tickMs: 250,
   },

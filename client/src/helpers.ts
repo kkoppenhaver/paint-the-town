@@ -22,7 +22,7 @@ export function gameDateTime(config: Config, simTime: number): string {
   const dayOffset = Math.floor(total / (24 * 60));
   const mins = ((total % (24 * 60)) + 24 * 60) % (24 * 60);
   const h = Math.floor(mins / 60);
-  const m = mins % 60;
+  const m = Math.floor(mins % 60); // floor so the real-time clock reads "9:08", not "9:08.37"
   const ampm = h >= 12 ? "PM" : "AM";
   const h12 = h % 12 === 0 ? 12 : h % 12;
   const day = DAYS[(weekday + dayOffset) % 7];
