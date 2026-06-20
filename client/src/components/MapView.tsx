@@ -9,11 +9,13 @@ interface Props {
   state: GameState | null;
   teamColors: Record<TeamId, string>;
   onPickArea?: (areaId: number) => void;
+  /** Lobby use: areaId → color to tint (e.g. chosen spawns), applied when state is null. */
+  highlight?: Record<number, string>;
 }
 
 const BAND_TINT: Record<number, string> = { 1: "#3a2f4a", 2: "#2f3a4a", 3: "#2f4a3a", 4: "#3a3a2f" };
 
-export function MapView({ board, state, teamColors, onPickArea }: Props) {
+export function MapView({ board, state, teamColors, onPickArea, highlight }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
@@ -98,8 +100,10 @@ export function MapView({ board, state, teamColors, onPickArea }: Props) {
 
     for (const a of board.areas) {
       const as = state?.areas[String(a.id)];
-      const color = as?.holderTeamId ? teamColors[as.holderTeamId] : null;
-      map.setFeatureState({ source: "areas", id: a.id }, { color, locked: as?.locked ?? false });
+      // In-game color = current holder; lobby color = highlight (chosen spawn).
+      const color = as?.holderTeamId ? teamColors[as.holderTeamId] : highlight?.[a.id] ?? null;
+      const locked = as?.locked ?? (highlight?.[a.id] != null); // bump opacity for spawns too
+      map.setFeatureState({ source: "areas", id: a.id }, { color, locked });
     }
 
     // wall ring

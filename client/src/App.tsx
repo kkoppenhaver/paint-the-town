@@ -139,26 +139,44 @@ function Lobby({ board, spawns, selected, myTeam, onPick, onSpawn, onStart, team
   onPick: (id: number) => void; onSpawn: (teamId: string, areaId: number) => void; onStart: () => void;
   teamColors: Record<string, string>; names: Record<string, string>;
 }) {
-  const teams = myTeam ? [myTeam] : ["A", "B"];
   const bothSpawned = ["A", "B"].every((t) => spawns[t] != null);
   const label = (t: string) => names[t] ?? `Team ${t}`;
+  const nameOf = (id: number | undefined) => (id != null ? board.areas.find((a) => a.id === id)?.name : undefined);
   const base = `${location.origin}${location.pathname}?room=${ROOM}`;
   const opp = myTeam === "A" ? "B" : "A";
+
+  // Tint each chosen spawn on the lobby map with its team color.
+  const highlight: Record<number, string> = {};
+  for (const t of ["A", "B"]) if (spawns[t] != null) highlight[spawns[t]] = teamColors[t] ?? "#888";
+
+  // Per-seat: clicking the map drops YOUR spawn directly. Hot-seat: select, then
+  // assign to A or B with the buttons (one window sets both).
+  const onMapPick = (id: number) => (myTeam ? onSpawn(myTeam, id) : onPick(id));
 
   return (
     <div className="lobby">
       <div className="lobby-side">
         <h2>{myTeam ? `You are ${label(myTeam)} — pick your spawn` : "Pick spawns"}</h2>
-        <p>Click an area on the map, then assign it. Both teams stay hidden until the game starts.</p>
-        {teams.map((t) => (
-          <div key={t} className="lobby-team">
-            <span className="dot" style={{ background: teamColors[t] ?? "#888" }} /> {label(t)}{t === myTeam ? " (you)" : ""}
-            <span className="spawn">{spawns[t] != null ? board.areas.find((a) => a.id === spawns[t])?.name : "—"}</span>
-            <button disabled={selected == null} onClick={() => selected != null && onSpawn(t, selected)}>
-              set to {selected != null ? `#${selected}` : "…"}
-            </button>
+        <p>{myTeam
+          ? "Tap a neighborhood on the map to drop your spawn. Tap another to move it."
+          : "Click an area on the map, then assign it to a team. Both teams stay hidden until the game starts."}</p>
+
+        {myTeam ? (
+          <div className={`lobby-team ${spawns[myTeam] != null ? "spawn-set" : ""}`}>
+            <span className="dot" style={{ background: teamColors[myTeam] ?? "#888" }} /> {label(myTeam)} (you)
+            <span className="spawn">{spawns[myTeam] != null ? `✓ ${nameOf(spawns[myTeam])}` : "tap the map →"}</span>
           </div>
-        ))}
+        ) : (
+          ["A", "B"].map((t) => (
+            <div key={t} className="lobby-team">
+              <span className="dot" style={{ background: teamColors[t] ?? "#888" }} /> {label(t)}
+              <span className="spawn">{nameOf(spawns[t]) ?? "—"}</span>
+              <button disabled={selected == null} onClick={() => selected != null && onSpawn(t, selected)}>
+                set to {selected != null ? `#${selected}` : "…"}
+              </button>
+            </div>
+          ))
+        )}
 
         {myTeam && (
           <div className="lobby-team opp-status">
@@ -177,7 +195,7 @@ function Lobby({ board, spawns, selected, myTeam, onPick, onSpawn, onStart, team
           <p className="hint">Two-browser play: open <code>{`${base}&team=A`}</code> in one window and <code>{`${base}&team=B`}</code> in the other — each controls one team. Or use the <b>seat</b> switch above and drive both here (hot-seat).</p>
         )}
       </div>
-      <MapView board={board} state={null} teamColors={teamColors} onPickArea={onPick} />
+      <MapView board={board} state={null} teamColors={teamColors} onPickArea={onMapPick} highlight={highlight} />
     </div>
   );
 }

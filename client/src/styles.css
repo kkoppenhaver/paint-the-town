@@ -21,6 +21,7 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
 }
 .lobby-team { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
 .lobby-team .spawn { color: var(--muted); flex: 1; }
+.lobby-team.spawn-set .spawn { color: #4ade80; font-weight: 600; }
 .start { margin-top: 16px; width: 100%; }
 .hint { color: var(--muted); font-size: 12px; margin-top: 20px; }
 
