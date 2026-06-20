@@ -66,13 +66,18 @@ The key stays server-side; both browsers get the identical resolved time. Travel
 No-route weekend pairs are capped and fall back to the estimator so the clock never stalls
 (spec §2.3).
 
-## The decision-driven clock
+## The clock — slow while deciding, fast while executing
 
-Game-time only advances when **no team has a pending decision** (spec §2.1). When a team is
-idle at an area, the clock is frozen — thinking and phone-research are free. Once every team
-is committed (in transit, claiming, or explicitly waiting), the server fast-forwards to the
-next decision point: an arrival, a claim completing, a wall contraction, or a cache
-appearing. Any board change re-opens decisions and re-freezes the clock.
+Live play runs a **real-time clock at two speeds** (`config.pacing`): game-time creeps
+slowly while any team still has a pending decision (gentle pressure — `decisionGameMinPerSec`,
+default 0.5), and **fast-forwards** while every team is committed (in transit, claiming, or
+waiting — `executionGameMinPerSec`, default 15) up to the next event: an arrival, a claim
+completing, a wall contraction, or a cache appearing. Any board change re-opens decisions and
+drops back to the slow rate. Set `decisionGameMinPerSec: 0` to fully freeze the clock during
+decisions (the original "thinking is free" decision-driven model).
+
+The **headless balance sims** ignore real-time pacing and use the instant `advance` step, so
+sweeps still run at full speed and stay deterministic.
 
 ## Board data & bands
 

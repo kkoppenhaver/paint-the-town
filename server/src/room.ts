@@ -2,8 +2,6 @@
 // resolves arrivals / contractions / cache spawns / captures (spec §10).
 
 import {
-  advance,
-  allCommitted,
   buildDebugLog,
   createGame,
   DEFAULT_CONFIG,
@@ -14,6 +12,7 @@ import {
   submitClaim,
   submitTravel,
   submitWait,
+  tick,
   usePowerUp,
   type Board,
   type Config,
@@ -33,6 +32,7 @@ export class Room {
   /** Set once a finished game's debug log has been written (avoid duplicate writes). */
   debugLogged = false;
   private provider: TravelProvider;
+  private lastTickReal = 0; // epoch ms of the previous clock tick
 
   constructor(
     public readonly id: string,
@@ -56,6 +56,7 @@ export class Room {
       this.state.config.challenge = config.challenge;
       this.state.config.powerUps = config.powerUps;
       this.state.config.travel = config.travel;
+      this.state.config.pacing = config.pacing;
     }
   }
 
@@ -66,6 +67,27 @@ export class Room {
     this.state = createGame(this.config, this.board, this.spawns);
     this.phase = "running";
     this.debugLogged = false;
+    this.lastTickReal = Date.now();
+  }
+
+  /**
+   * Advance the real-time clock since the last tick. Time creeps while a team has a
+   * pending decision and fast-forwards while all teams are committed (executing
+   * travel/challenges). Returns true if any game-time elapsed (i.e. broadcast-worthy).
+   */
+  tickClock(): boolean {
+    if (this.phase !== "running" || !this.state) return false;
+    const now = Date.now();
+    const dtSec = (now - this.lastTickReal) / 1000;
+    this.lastTickReal = now;
+    if (dtSec <= 0) return false;
+    const pacing = this.state.config.pacing; // live config (patchable mid-game)
+    const anyDeciding = this.state.teams.some(isIdle);
+    const rate = anyDeciding ? pacing.decisionGameMinPerSec : pacing.executionGameMinPerSec;
+    if (rate <= 0 && anyDeciding) return false; // frozen-while-deciding mode (rate 0)
+    tick(this.state, this.board, rate * dtSec);
+    if (this.state.clock.phase === "finished") this.phase = "finished";
+    return true;
   }
 
   reset(): void {
@@ -103,14 +125,8 @@ export class Room {
         });
         break;
     }
-
-    // Decision-driven clock: roll forward while every team is committed, stopping
-    // the instant someone becomes idle (a pending decision) or the game ends.
-    let guard = 0;
-    while (s.clock.phase === "running" && allCommitted(s) && guard++ < 100_000) {
-      advance(s, this.board);
-    }
-    if (s.clock.phase === "finished") this.phase = "finished";
+    // The real-time tick loop (tickClock) owns the clock now: committing both teams
+    // makes time fast-forward on the next tick rather than jumping instantly here.
   }
 
   /** Teams currently facing a decision (clock frozen for them). */

@@ -21,6 +21,11 @@ export const DEFAULT_CONFIG: Config = {
     failChance: 0.15,
     retryPenaltyMin: 10,
   },
+  pacing: {
+    decisionGameMinPerSec: 0.5, // slow creep while a team is deciding (gentle pressure)
+    executionGameMinPerSec: 15, // fast-forward while both are committed
+    tickMs: 250,
+  },
   powerUps: {
     enabled: false, // Phase 1 MVP runs without power-ups (spec §11)
     inventoryCap: 2,

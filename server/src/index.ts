@@ -141,6 +141,22 @@ wss.on("connection", (sock) => {
   sock.on("close", () => clients.delete(sock));
 });
 
+// Real-time clock: tick every running room a few times a second. Time creeps while
+// a team is deciding and fast-forwards while both are committed (see Room.tickClock).
+setInterval(() => {
+  for (const [id, room] of rooms) {
+    if (room.phase === "running") {
+      const changed = room.tickClock(); // may flip phase to "finished" at the buzzer
+      if (changed) broadcast(id);
+    }
+    if (room.phase === "finished" && !room.debugLogged) {
+      writeRoomDebugLog(room, "finish");
+      room.debugLogged = true;
+      broadcast(id);
+    }
+  }
+}, 250);
+
 http.listen(PORT, () => {
   console.log(`Paint the Town room server on :${PORT}  (provider: ${process.env.GOOGLE_MAPS_API_KEY ? "google" : "estimate"})`);
 });

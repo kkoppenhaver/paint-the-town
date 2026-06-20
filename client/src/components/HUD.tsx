@@ -40,12 +40,12 @@ export function HUD({ state, idle }: { state: GameState; idle: string[] }) {
       </div>
 
       <div className="hud-block">
-        {state.clock.phase === "running" && idle.length > 0 ? (
-          <div className="paused">⏸ paused — {idle.join(" & ")} deciding</div>
-        ) : state.clock.phase === "finished" ? (
+        {state.clock.phase === "finished" ? (
           <div className="paused done">game over</div>
+        ) : idle.length > 0 ? (
+          <div className="paused">🐢 clock slow — {idle.join(" & ")} deciding</div>
         ) : (
-          <div className="paused live">clock running…</div>
+          <div className="paused live">⏩ fast-forwarding…</div>
         )}
       </div>
     </header>

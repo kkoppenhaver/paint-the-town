@@ -161,6 +161,16 @@ export interface Config {
     failChance: number;
     retryPenaltyMin: number;
   };
+  /** Real-time clock pacing for live play (the headless sim ignores this and uses
+   *  the instant decision-driven `advance`). game-minutes advanced per real second
+   *  while a team still has a pending decision (slow) vs while all teams are
+   *  committed and time is just executing travel/challenges (fast). Set
+   *  decisionGameMinPerSec to 0 to fully freeze the clock during decisions. */
+  pacing: {
+    decisionGameMinPerSec: number;
+    executionGameMinPerSec: number;
+    tickMs: number;
+  };
   powerUps: {
     enabled: boolean;
     inventoryCap: number;

@@ -331,19 +331,50 @@ function otherTeamId(state: GameState, teamId: TeamId): TeamId {
 export function advance(state: GameState, board: Board): EventLogEntry[] {
   if (state.clock.phase !== "running") return [];
   if (!allCommitted(state)) throw new Error("clock frozen: a team has a pending decision");
+  return stepTo(state, board, nextEventTime(state));
+}
 
-  const before = state.log.length;
-  const buzzer = state.config.game.gameLengthMin;
-
-  // earliest upcoming event time
-  const candidates: number[] = [buzzer];
+/** Earliest upcoming scheduled event time (arrival / claim / contraction / cache / buzzer). */
+function nextEventTime(state: GameState): number {
+  const candidates: number[] = [state.config.game.gameLengthMin];
   for (const t of state.teams) {
     if (t.inTransit) candidates.push(t.inTransit.arrivalSimTime);
     if (t.busyUntilSimTime != null) candidates.push(t.busyUntilSimTime);
   }
   if (state.wall.nextContractionAt != null) candidates.push(state.wall.nextContractionAt);
   if (state.nextCacheSpawnAt != null) candidates.push(state.nextCacheSpawnAt);
-  const T = Math.min(...candidates);
+  return Math.min(...candidates);
+}
+
+/**
+ * Real-time clock step for live play (spec §2.1, relaxed): advance the clock by
+ * `deltaMin` game-minutes, resolving any scheduled events crossed. Unlike `advance`
+ * it does not require all teams to be committed — the server calls it on a timer
+ * with a slow rate while a team is deciding and a fast rate while all are committed.
+ */
+export function tick(state: GameState, board: Board, deltaMin: number): EventLogEntry[] {
+  if (state.clock.phase !== "running") return [];
+  const before = state.log.length;
+  let remaining = Math.max(0, deltaMin);
+  // resolve as many events as the delta reaches (handles large dt after a stall)
+  while (state.clock.phase === "running") {
+    const T = nextEventTime(state);
+    if (state.clock.simTime + remaining >= T) {
+      remaining -= T - state.clock.simTime;
+      stepTo(state, board, T);
+      if (remaining <= 0) break;
+    } else {
+      state.clock.simTime += remaining;
+      break;
+    }
+  }
+  return state.log.slice(before);
+}
+
+/** Jump the clock to time `T` and apply every event scheduled at/through it. */
+function stepTo(state: GameState, board: Board, T: number): EventLogEntry[] {
+  const before = state.log.length;
+  const buzzer = state.config.game.gameLengthMin;
   state.clock.simTime = T;
 
   // 1) resolve completions due at or before T (arrivals + claims)
