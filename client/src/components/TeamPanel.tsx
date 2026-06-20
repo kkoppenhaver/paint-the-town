@@ -24,6 +24,7 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
   const canClaim = idle && live && hereState.holderTeamId !== team.id && hereState.deckRemaining > 0;
   const captures = hereState.holderTeamId != null && hereState.holderTeamId !== team.id;
   const target = dest !== "" ? dest : selectedArea ?? "";
+  const areasByName = [...board.areas].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className={`panel${controllable ? "" : " panel-readonly"}`} style={{ borderTopColor: team.color }}>
@@ -71,9 +72,9 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
         <div className="travel-row">
           <select value={target} onChange={(e) => setDest(e.target.value === "" ? "" : Number(e.target.value))} disabled={!idle}>
             <option value="">travel to…</option>
-            {board.areas.map((a) => (
+            {areasByName.map((a) => (
               <option key={a.id} value={a.id} disabled={a.id === team.locationAreaId}>
-                {a.id} · {a.name} (B{a.band})
+                {a.name} (B{a.band})
               </option>
             ))}
           </select>
