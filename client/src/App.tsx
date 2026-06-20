@@ -72,8 +72,10 @@ export default function App() {
           const mine = myTeam ? teams.find((t) => t.id === myTeam) ?? null : null;
           const left = mine ?? teams[0];
           const right = mine ? teams.find((t) => t.id !== myTeam) ?? teams[1] : teams[1];
+          // In per-seat play, glow the whole window when this seat's team must act.
+          const myTurn = !!mine && room.phase === "running" && !mine.inTransit && mine.busyUntilSimTime == null && !mine.waiting;
           return (
-        <div className="game">
+        <div className={`game${myTurn ? " my-turn" : ""}`}>
           <HUD state={room.state} idle={idle} />
           <div className="game-body">
             <aside className="left">

@@ -25,14 +25,26 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
   const captures = hereState.holderTeamId != null && hereState.holderTeamId !== team.id;
   const target = dest !== "" ? dest : selectedArea ?? "";
   const areasByName = [...board.areas].sort((a, b) => a.name.localeCompare(b.name));
+  const running = state.clock.phase === "running";
 
   return (
-    <div className={`panel${controllable ? "" : " panel-readonly"}`} style={{ borderTopColor: team.color }}>
+    <div className={`panel${controllable ? "" : " panel-readonly"}${running && idle && controllable ? " panel-active" : ""}`} style={{ borderTopColor: team.color }}>
       <div className="panel-head">
         <span className="dot" style={{ background: team.color }} /> {team.name}
         {mine && <span className="you-tag">you</span>}
         {!controllable && <span className="opp-tag">opponent</span>}
       </div>
+
+      {running && controllable && (
+        idle ? (
+          <div className="turn-banner active" style={{ background: team.color }}>▶ Your turn — claim, travel, or wait</div>
+        ) : (
+          <div className="turn-banner committed">✓ committed — waiting for the clock to advance</div>
+        )
+      )}
+      {running && !controllable && idle && (
+        <div className="turn-banner deciding">… {team.name} is deciding</div>
+      )}
 
       <div className="panel-status">
         {team.inTransit ? (
