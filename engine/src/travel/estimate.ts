@@ -14,17 +14,33 @@ export const estimateProvider: TravelProvider = {
     const a = getArea(board, from);
     const b = getArea(board, to);
     const km = distanceKm(a.centroid, b.centroid);
-    const { transitSpeedKmh, perTransferMin, baseAccessMin, accessPenaltyPerLevelMin } =
+    const { transitSpeedKmh, railSpeedKmh, perTransferMin, baseAccessMin, accessPenaltyPerLevelMin } =
       config.travel.estimate;
 
-    const rideMin = (km / transitSpeedKmh) * 60;
-    // Rough transfer count: ~1 transfer per 4 km of separation.
-    const transfers = Math.floor(km / 4);
     // Sparse-transit penalty at each end: areas far below a perfect score pay extra
     // access/wait time, so the offline model feels transit deserts (missing score = 5).
     const penalty = (score?: number) => (5 - (score ?? 5)) * accessPenaltyPerLevelMin;
-    const minutes =
-      baseAccessMin + rideMin + transfers * perTransferMin + penalty(a.transitScore) + penalty(b.transitScore);
+
+    // Rail topology (nearly all Chicago rail converges downtown):
+    //  - share a line          → one-seat ride: rail speed, no transfer (O'Hare→Loop).
+    //  - both on some rail line → rail speed + one downtown transfer (O'Hare→Near North).
+    //  - otherwise (bus-heavy)  → slower mixed speed + a transfer per ~4 km.
+    // Frequency cost (infrequent Metra/bus) is carried by the per-area score penalty.
+    const aRail = (a.lines?.length ?? 0) > 0;
+    const bRail = (b.lines?.length ?? 0) > 0;
+    const shared = aRail && bRail && a.lines!.some((l) => b.lines!.includes(l));
+    let rideMin: number, transferMin: number;
+    if (shared) {
+      rideMin = (km / railSpeedKmh) * 60;
+      transferMin = 0;
+    } else if (aRail && bRail) {
+      rideMin = (km / railSpeedKmh) * 60;
+      transferMin = perTransferMin; // one transfer downtown
+    } else {
+      rideMin = (km / transitSpeedKmh) * 60;
+      transferMin = Math.floor(km / 4) * perTransferMin; // bus-heavy: ~1 per 4 km
+    }
+    const minutes = baseAccessMin + rideMin + transferMin + penalty(a.transitScore) + penalty(b.transitScore);
 
     const capped = Math.min(minutes, config.travel.maxTravelMin);
     return {

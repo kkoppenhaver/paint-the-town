@@ -51,6 +51,7 @@ export const DEFAULT_CONFIG: Config = {
     maxTravelMin: 120,
     estimate: {
       transitSpeedKmh: 18, // door-to-door transit incl. stops, city average
+      railSpeedKmh: 24, // one-seat L/Metra ride (calibrated to Google: O'Hare→Loop ≈ 66m)
       perTransferMin: 7,
       baseAccessMin: 8,
       accessPenaltyPerLevelMin: 6, // score 3 → +12 each end; a desert (1) → +24

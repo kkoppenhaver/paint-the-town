@@ -34,6 +34,9 @@ export interface AreaStatic {
   /** Transit access quality, 1 (desert) .. 5 (multi-line hub). Drives the offline
    *  estimator's access penalty so sparse-service areas cost more. From transit.json. */
   transitScore?: number;
+  /** Canonical rail/Metra lines serving the area (parsed from transit.json `modes`).
+   *  Two areas sharing a line get a fast one-seat ride in the offline estimator. */
+  lines?: string[];
   deckSize: number;
 }
 
@@ -213,7 +216,8 @@ export interface Config {
     maxTravelMin: number;
     /** estimate-provider knobs */
     estimate: {
-      transitSpeedKmh: number;
+      transitSpeedKmh: number; // mixed bus+rail+transfers average (no shared line)
+      railSpeedKmh: number; // faster: a one-seat ride when origin & dest share a rail line
       perTransferMin: number;
       baseAccessMin: number; // walk to/from stations + wait
       /** Extra minutes per step below a perfect transit score (per endpoint), so sparse
