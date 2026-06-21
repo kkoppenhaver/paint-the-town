@@ -17,6 +17,8 @@ export const DEFAULT_CONFIG: Config = {
     edgeMarginKm: 1.5,
   },
   bandValues: { "1": 8, "2": 4, "3": 2, "4": 1 },
+  scoring: { transitBonusPerLevel: 0 }, // 0 = original gradient; raise to compensate deserts
+
   challenge: {
     durationMinRange: [8, 16],
     failChance: 0.15,

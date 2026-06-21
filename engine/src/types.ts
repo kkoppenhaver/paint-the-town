@@ -174,6 +174,12 @@ export interface Config {
     edgeMarginKm: number;
   };
   bandValues: Record<"1" | "2" | "3" | "4", number>;
+  scoring: {
+    /** Per-area value bonus for poor transit access: value += this * (5 - transitScore).
+     *  Compensates the South/Southeast transit-desert spawn bias by making hard-to-reach
+     *  areas worth the trip. 0 = pure band value (the original center-weighted gradient). */
+    transitBonusPerLevel: number;
+  };
   challenge: {
     durationMinRange: [number, number];
     failChance: number;

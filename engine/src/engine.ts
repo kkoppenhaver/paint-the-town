@@ -10,6 +10,7 @@ import type { TravelProvider } from "./travel/provider.js";
 import type {
   AreaId,
   AreaState,
+  AreaStatic,
   Board,
   Cache,
   Challenge,
@@ -148,9 +149,13 @@ export function allCommitted(state: GameState): boolean {
   return state.teams.every((t) => isBusy(t) || t.waiting);
 }
 
-function bandValue(state: GameState, board: Board, id: AreaId): number {
-  const band = getArea(board, id).band;
-  return state.config.bandValues[String(band) as "1" | "2" | "3" | "4"];
+/** An area's point value: the band base plus a transit-access bonus (config.scoring),
+ *  so poorly-served areas can be made worth the trip. The single source of truth used
+ *  by scoring, the AI, and telemetry. */
+export function areaValue(config: Config, area: AreaStatic): number {
+  const base = config.bandValues[String(area.band) as "1" | "2" | "3" | "4"];
+  const bonus = (config.scoring?.transitBonusPerLevel ?? 0) * (5 - (area.transitScore ?? 5));
+  return base + bonus;
 }
 
 export function recomputeScores(state: GameState, board: Board): void {
@@ -161,7 +166,7 @@ export function recomputeScores(state: GameState, board: Board): void {
   for (const a of Object.values(state.areas)) {
     if (!a.holderTeamId) continue;
     const t = getTeam(state, a.holderTeamId);
-    const v = bandValue(state, board, a.id) * a.bonusMultiplier;
+    const v = areaValue(state.config, getArea(board, a.id)) * a.bonusMultiplier;
     if (a.locked) t.lockedScore += v;
     else t.provisionalScore += v;
   }

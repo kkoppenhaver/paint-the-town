@@ -5,6 +5,7 @@ import {
   advance,
   allCommitted,
   areaState,
+  areaValue,
   createGame,
   isIdle,
   isLiveArea,
@@ -43,7 +44,7 @@ function candidateScore(
   strategy: Strategy,
 ): number {
   const area = getArea(board, id);
-  const value = state.config.bandValues[String(area.band) as "1" | "2" | "3" | "4"];
+  const value = areaValue(state.config, area);
   const dist = distanceKm(getArea(board, team.locationAreaId).centroid, area.centroid);
   const outermostLive = Math.max(...state.wall.liveBands);
   switch (strategy) {

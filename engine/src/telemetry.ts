@@ -1,6 +1,7 @@
 // Per-run telemetry (spec §9) — the metrics that answer the open tuning dials.
 
 import { largestConnectedRegion } from "./board.js";
+import { areaValue } from "./engine.js";
 import type { AreaId, Board, GameState, TeamId } from "./types.js";
 
 export interface BandBreakdown {
@@ -45,8 +46,7 @@ function heldBy(state: GameState, teamId: TeamId): Set<AreaId> {
 
 export function computeTelemetry(state: GameState, board: Board): Telemetry {
   const bandOf = (id: AreaId) => board.areas.find((a) => a.id === id)!.band;
-  const valueOf = (id: AreaId) =>
-    state.config.bandValues[String(bandOf(id)) as "1" | "2" | "3" | "4"];
+  const valueOf = (id: AreaId) => areaValue(state.config, board.areas.find((a) => a.id === id)!);
 
   // ---- per-team aggregates from the event log + final state ----
   const teams: TeamTelemetry[] = state.teams.map((t) => ({
