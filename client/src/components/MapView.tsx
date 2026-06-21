@@ -15,6 +15,19 @@ interface Props {
 
 const BAND_TINT: Record<number, string> = { 1: "#3a2f4a", 2: "#2f3a4a", 3: "#2f4a3a", 4: "#3a3a2f" };
 
+/** Map label = area name + its point value, e.g. "Hyde Park\n4 pt". Value comes from
+ *  the (possibly hot-edited) band values, falling back to the spec default gradient. */
+function labelExpr(bandValues?: Record<string, number>): maplibregl.ExpressionSpecification {
+  const v = bandValues ?? { "1": 8, "2": 4, "3": 2, "4": 1 };
+  return [
+    "concat",
+    ["get", "name"],
+    "\n",
+    ["match", ["get", "band"], 1, String(v["1"]), 2, String(v["2"]), 3, String(v["3"]), String(v["4"])],
+    " pt",
+  ] as unknown as maplibregl.ExpressionSpecification;
+}
+
 export function MapView({ board, state, teamColors, onPickArea, highlight }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -61,7 +74,7 @@ export function MapView({ board, state, teamColors, onPickArea, highlight }: Pro
         id: "area-label",
         type: "symbol",
         source: "areas",
-        layout: { "text-field": ["get", "name"], "text-font": ["Noto Sans Regular"], "text-size": 9, "text-max-width": 7 },
+        layout: { "text-field": labelExpr(), "text-font": ["Noto Sans Regular"], "text-size": 9, "text-max-width": 7 },
         paint: { "text-color": "#cdd3df", "text-halo-color": "#0008", "text-halo-width": 1 },
       });
 
@@ -97,6 +110,11 @@ export function MapView({ board, state, teamColors, onPickArea, highlight }: Pro
   function paint() {
     const map = mapRef.current;
     if (!map || !loadedRef.current) return;
+
+    // keep the value in each label current with the (hot-editable) band values
+    if (map.getLayer("area-label")) {
+      map.setLayoutProperty("area-label", "text-field", labelExpr(state?.config.bandValues));
+    }
 
     for (const a of board.areas) {
       const as = state?.areas[String(a.id)];
