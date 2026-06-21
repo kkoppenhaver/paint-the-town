@@ -9,4 +9,4 @@ export { createGoogleProvider } from "./travel/google.js";
 export * from "./headless.js";
 export * from "./telemetry.js";
 export * from "./debugLog.js";
-export { loadBoard } from "./loadBoard.js";
+export { loadBoard, attachTransit } from "./loadBoard.js";

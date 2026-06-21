@@ -51,6 +51,7 @@ export const DEFAULT_CONFIG: Config = {
       transitSpeedKmh: 18, // door-to-door transit incl. stops, city average
       perTransferMin: 7,
       baseAccessMin: 8,
+      accessPenaltyPerLevelMin: 6, // score 3 → +12 each end; a desert (1) → +24
     },
   },
 };

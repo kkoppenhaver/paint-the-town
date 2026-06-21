@@ -3,8 +3,9 @@ import type { AreaId, Board, Config } from "../types.js";
 export interface TravelResult {
   /** Resolved travel time in sim minutes. */
   minutes: number;
-  /** Where the time came from — useful for telemetry and no-route flagging. */
-  source: "google" | "estimate" | "cap";
+  /** Where the time came from — useful for telemetry and no-route flagging.
+   *  "walk" = no transit route; bridged by riding to a neighbor and walking in. */
+  source: "google" | "estimate" | "cap" | "walk";
   /** Optional human-readable itinerary summary (Google only). */
   summary?: string;
 }

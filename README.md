@@ -63,8 +63,16 @@ GOOGLE_MAPS_API_KEY=... npm run server
 The key stays server-side; both browsers get the identical resolved time. Travel uses the
 **Routes API** (`computeRoutes`, `travelMode: TRANSIT`), mapping the in-game datetime
 (default Saturday 9 AM) to a real future timestamp on the same weekday for a real lookup.
-No-route weekend pairs are capped and fall back to the estimator so the clock never stalls
-(spec §2.3).
+
+Each area routes from its **real transit anchor** (a CTA/Metra/South Shore station or major
+stop, in `data/transit.json`) plus a short walk to/from the anchor — not its geometric
+centroid — so far-flung neighborhoods separated by rivers or rail yards still resolve (e.g.
+Riverdale↔South Deering, which returned *no route* centroid-to-centroid, now routes via the
+Metra Electric in ~83 min). If a pair genuinely has no transit route, it does **not** fall
+back to a fake distance estimate: it **bridges** — ride to the nearest routable neighbor,
+then walk in (honest and slow), flagged `source: "walk"`. The **offline estimator** folds
+each area's 1–5 transit-access score (`transit.json`) into an access penalty, so transit
+deserts (Riverdale, Mount Greenwood, the far Southeast Side) cost more in headless sweeps too.
 
 ## The clock — slow while deciding, fast while executing
 

@@ -27,6 +27,13 @@ export interface AreaStatic {
    *  this — i.e. when no part of the area is inside the circle. Loop = 0. Optional so
    *  synthetic test boards (no geometry) fall back to centroid distance. */
   nearKm?: number;
+  /** Real transit access point (station/major stop) used to route to/from this area,
+   *  instead of its geometric centroid — so far-flung centroids separated by rivers or
+   *  rail yards still find a route. From data/transit.json. */
+  anchor?: LatLng;
+  /** Transit access quality, 1 (desert) .. 5 (multi-line hub). Drives the offline
+   *  estimator's access penalty so sparse-service areas cost more. From transit.json. */
+  transitScore?: number;
   deckSize: number;
 }
 
@@ -203,6 +210,9 @@ export interface Config {
       transitSpeedKmh: number;
       perTransferMin: number;
       baseAccessMin: number; // walk to/from stations + wait
+      /** Extra minutes per step below a perfect transit score (per endpoint), so sparse
+       *  areas cost more: penalty = (5 - transitScore) * this, added for from and to. */
+      accessPenaltyPerLevelMin: number;
     };
   };
 }

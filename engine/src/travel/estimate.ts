@@ -11,13 +11,20 @@ import type { TravelProvider, TravelResult } from "./provider.js";
 export const estimateProvider: TravelProvider = {
   async travelTime({ board, config, from, to }): Promise<TravelResult> {
     if (from === to) return { minutes: 0, source: "estimate" };
-    const km = distanceKm(getArea(board, from).centroid, getArea(board, to).centroid);
-    const { transitSpeedKmh, perTransferMin, baseAccessMin } = config.travel.estimate;
+    const a = getArea(board, from);
+    const b = getArea(board, to);
+    const km = distanceKm(a.centroid, b.centroid);
+    const { transitSpeedKmh, perTransferMin, baseAccessMin, accessPenaltyPerLevelMin } =
+      config.travel.estimate;
 
     const rideMin = (km / transitSpeedKmh) * 60;
     // Rough transfer count: ~1 transfer per 4 km of separation.
     const transfers = Math.floor(km / 4);
-    const minutes = baseAccessMin + rideMin + transfers * perTransferMin;
+    // Sparse-transit penalty at each end: areas far below a perfect score pay extra
+    // access/wait time, so the offline model feels transit deserts (missing score = 5).
+    const penalty = (score?: number) => (5 - (score ?? 5)) * accessPenaltyPerLevelMin;
+    const minutes =
+      baseAccessMin + rideMin + transfers * perTransferMin + penalty(a.transitScore) + penalty(b.transitScore);
 
     const capped = Math.min(minutes, config.travel.maxTravelMin);
     return {

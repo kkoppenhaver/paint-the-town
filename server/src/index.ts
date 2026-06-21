@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { WebSocketServer, type WebSocket } from "ws";
-import { formatDebugLogText, type Board } from "@ptt/engine";
+import { attachTransit, formatDebugLogText, type Board } from "@ptt/engine";
 import { Room } from "./room.js";
 import type { ClientMessage, ServerMessage } from "./protocol.js";
 
@@ -25,6 +25,7 @@ try {
 } catch {
   console.warn("challenges.json not found — claims will run without challenge text");
 }
+attachTransit(board.areas, join(here, "../../data")); // anchors + transit scores for routing
 const PORT = Number(process.env.PORT ?? 8787);
 
 const rooms = new Map<string, Room>();

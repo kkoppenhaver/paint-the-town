@@ -14,5 +14,23 @@ export function loadBoard(): Board {
   } catch {
     challenges = undefined; // optional — the engine tolerates a board with no decks
   }
+  attachTransit(raw.areas, dataDir);
   return { areas: raw.areas, adjacency: raw.adjacency, loopAreaId: raw.loopAreaId, challenges };
+}
+
+/** Merge data/transit.json (anchor + transitScore) onto the board areas in place.
+ *  Optional: absent file leaves areas routing centroid-to-centroid with no penalty. */
+export function attachTransit(areas: Board["areas"], dataDir: string): void {
+  let byArea: Record<string, { lat: number; lng: number; transitScore?: number }>;
+  try {
+    byArea = JSON.parse(readFileSync(join(dataDir, "transit.json"), "utf8")).byArea;
+  } catch {
+    return;
+  }
+  for (const a of areas) {
+    const t = byArea[String(a.id)];
+    if (!t) continue;
+    a.anchor = { lat: t.lat, lng: t.lng };
+    a.transitScore = t.transitScore;
+  }
 }
