@@ -14,6 +14,7 @@ export const DEFAULT_CONFIG: Config = {
   wall: {
     // Contractions lock Band 4 / 3 / 2 at 2.5h / 5h / 6.5h; Band 1 at the 8h buzzer.
     contractionsAtMin: [150, 300, 390],
+    edgeMarginKm: 1.5,
   },
   bandValues: { "1": 8, "2": 4, "3": 2, "4": 1 },
   challenge: {

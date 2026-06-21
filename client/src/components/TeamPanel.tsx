@@ -20,7 +20,10 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
   const idle = !team.inTransit && team.busyUntilSimTime == null && !team.waiting;
   const here = board.areas.find((a) => a.id === team.locationAreaId)!;
   const hereState = state.areas[String(team.locationAreaId)]!;
-  const live = !hereState.locked && state.wall.liveBands.includes(here.band);
+  // Live = not yet swept by the wall. The engine locks an area only once the circle
+  // has fully cleared it (the core stays live until the buzzer), so `locked` is the
+  // authoritative claimable flag.
+  const live = !hereState.locked;
   const canClaim = idle && live && hereState.holderTeamId !== team.id && hereState.deckRemaining > 0;
   const captures = hereState.holderTeamId != null && hereState.holderTeamId !== team.id;
   const target = dest !== "" ? dest : selectedArea ?? "";

@@ -108,7 +108,7 @@ export function MapView({ board, state, teamColors, onPickArea, highlight }: Pro
 
     // wall ring
     const wallSrc = map.getSource("wall") as maplibregl.GeoJSONSource | undefined;
-    if (wallSrc && state && state.wall.liveBands.length) {
+    if (wallSrc && state && state.wall.radiusKm > 0) {
       const loop = board.areas.find((a) => a.id === board.loopAreaId)!.centroid;
       wallSrc.setData({ type: "FeatureCollection", features: [circlePolygon(loop, liveRadiusKm(board, state))] });
     } else if (wallSrc) {

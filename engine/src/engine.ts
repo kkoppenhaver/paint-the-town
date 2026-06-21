@@ -4,7 +4,7 @@
 // (spec §2.1) only advances when every team is committed (in transit, claiming,
 // or explicitly waiting); the instant any team becomes idle, the clock freezes.
 
-import { getArea, largestConnectedRegion } from "./board.js";
+import { distanceKm, getArea, largestConnectedRegion } from "./board.js";
 import { nextIntInRange, nextRandom } from "./rng.js";
 import type { TravelProvider } from "./travel/provider.js";
 import type {
@@ -70,6 +70,7 @@ export function createGame(
       liveBands: [1, 2, 3, 4],
       contractionsDone: 0,
       nextContractionAt: config.wall.contractionsAtMin[0] ?? null,
+      radiusKm: 0, // set by updateWall() below
     },
     areas,
     teams,
@@ -84,6 +85,7 @@ export function createGame(
   };
 
   log(state, "game_start", {});
+  updateWall(state, board); // prime wall.radiusKm (and lock nothing — whole city live)
   // Spawns reveal together — the one true tie (spec §2.1). Both teams then idle.
   recomputeScores(state, board);
   return state;
@@ -115,10 +117,22 @@ export function areaState(state: GameState, id: AreaId): AreaState {
   return a;
 }
 
-/** A band is live (claimable) iff still inside the wall. */
+/** Nearest distance (km) from the Loop centroid to an area's edge — the radius at
+ *  which the closing wall finally clears it. Falls back to centroid distance for
+ *  synthetic boards that carry no polygon-derived `nearKm`. */
+export function areaNearKm(board: Board, id: AreaId): number {
+  const a = getArea(board, id);
+  if (a.nearKm != null) return a.nearKm;
+  return distanceKm(a.centroid, getArea(board, board.loopAreaId).centroid);
+}
+
+/** An area is live (claimable) iff any part of it is still inside the wall circle.
+ *  The Band-1 core is always live until the buzzer locks it (it's never swept). */
 export function isLiveArea(state: GameState, board: Board, id: AreaId): boolean {
   const a = areaState(state, id);
-  return !a.locked && state.wall.liveBands.includes(getArea(board, id).band);
+  if (a.locked) return false;
+  if (getArea(board, id).band === 1) return true;
+  return areaNearKm(board, id) < state.wall.radiusKm;
 }
 
 function isBusy(t: Team): boolean {
@@ -364,7 +378,12 @@ export function tick(state: GameState, board: Board, deltaMin: number): EventLog
       stepTo(state, board, T);
       if (remaining <= 0) break;
     } else {
+      // Partial step between scheduled events: the wall still shrinks continuously,
+      // so update its radius (and lock any area it has just cleared) at the new time.
+      const mark = state.log.length;
       state.clock.simTime += remaining;
+      updateWall(state, board);
+      settle(state, board, mark);
       break;
     }
   }
@@ -385,8 +404,9 @@ function stepTo(state: GameState, board: Board, T: number): EventLogEntry[] {
     if (t.busyUntilSimTime != null && t.busyUntilSimTime <= T) resolveClaim(state, board, t);
   }
 
-  // 2) wall contraction at exactly T (fails in-progress claims on the locking band)
-  if (state.wall.nextContractionAt === T) applyContraction(state, board, T);
+  // 2) shrink the wall to T: fire any contraction markers crossed, and lock every
+  //    area the circle has now cleared (failing claims caught mid-attempt).
+  updateWall(state, board);
 
   // 3) cache spawn at exactly T
   if (state.nextCacheSpawnAt === T) spawnCache(state, board, T);
@@ -394,23 +414,25 @@ function stepTo(state: GameState, board: Board, T: number): EventLogEntry[] {
   // 4) buzzer
   if (T >= buzzer) finishGame(state, board);
 
-  // teams that just arrived/finished are idle → clock will freeze for their input.
-  // a board change (contraction/cache/claim/capture/lock) re-activates anyone who
-  // was waiting, since it may open a new choice (spec §2.1).
+  settle(state, board, before);
+  return state.log.slice(before);
+}
+
+/** After a step, re-activate waiting teams if the board changed in a way that opens a
+ *  new choice (a staged contraction, a cache, or an ownership change) and recompute
+ *  scores. Individual area locks as the circle sweeps are NOT triggers — they'd nudge
+ *  a parked team constantly and never open a new option. */
+function settle(state: GameState, board: Board, sinceLen: number): void {
   const BOARD_CHANGE: EventType[] = [
     "contraction",
     "cache_spawn",
     "claim_success",
     "capture",
-    "area_locked",
   ];
-  const boardChanged = state.log.slice(before).some((e) => BOARD_CHANGE.includes(e.type));
-  if (boardChanged) {
+  if (state.log.slice(sinceLen).some((e) => BOARD_CHANGE.includes(e.type))) {
     for (const t of state.teams) if (!isBusy(t)) t.waiting = false;
   }
-
   recomputeScores(state, board);
-  return state.log.slice(before);
 }
 
 function resolveArrival(state: GameState, board: Board, t: Team): void {
@@ -451,30 +473,79 @@ function resolveClaim(state: GameState, board: Board, t: Team): void {
   log(state, claim.capture ? "capture" : "claim_success", {}, t.id, claim.areaId);
 }
 
-function applyContraction(state: GameState, board: Board, T: number): void {
-  const lockedBand = state.wall.liveBands[state.wall.liveBands.length - 1]; // outermost live
-  state.wall.contractionsDone += 1;
-  log(state, "contraction", { band: lockedBand, at: T });
+// Bands cleared, in order, by each scheduled contraction (Band 1 core locks at buzzer).
+const BANDS_BY_CONTRACTION: Array<2 | 3 | 4> = [4, 3, 2];
 
-  for (const a of Object.values(state.areas)) {
-    if (getArea(board, a.id).band !== lockedBand) continue;
+/**
+ * Wall radius (km) at sim-time `t`. Piecewise-linear: starts enclosing the whole city,
+ * passes each band's inner edge at that band's contraction time, then holds at the core
+ * boundary until the buzzer (the core all locks at once at the end).
+ */
+function wallRadiusAt(state: GameState, board: Board, t: number): number {
+  const cfg = state.config;
+  const minNearOfBand = (band: number): number => {
+    let m = Infinity;
+    for (const a of board.areas) if (a.band === band) m = Math.min(m, areaNearKm(board, a.id));
+    return m === Infinity ? 0 : m;
+  };
+  let maxNear = 0;
+  for (const a of board.areas) maxNear = Math.max(maxNear, areaNearKm(board, a.id));
 
-    // mid-claim when the wall hits: busyUntil > T → the claim fails (spec §4).
-    for (const t of state.teams) {
-      if (t.busyClaim?.areaId === a.id && t.busyUntilSimTime != null && t.busyUntilSimTime > T) {
-        t.busyUntilSimTime = null;
-        t.busyClaim = null;
-        t.lastFailedClaimAreaId = a.id;
-        log(state, "claim_fail", { reason: "wall" }, t.id, a.id);
-      }
+  const pts: Array<{ t: number; r: number }> = [{ t: 0, r: maxNear + cfg.wall.edgeMarginKm }];
+  cfg.wall.contractionsAtMin.forEach((ct, i) => {
+    const band = BANDS_BY_CONTRACTION[i];
+    pts.push({ t: ct, r: band != null ? minNearOfBand(band) : 0 });
+  });
+  pts.push({ t: cfg.game.gameLengthMin, r: pts[pts.length - 1]!.r }); // hold core ring to buzzer
+  for (let i = 1; i < pts.length; i++) pts[i]!.r = Math.min(pts[i]!.r, pts[i - 1]!.r); // monotonic
+
+  if (t <= pts[0]!.t) return pts[0]!.r;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i]!;
+    const b = pts[i + 1]!;
+    if (t <= b.t) return b.t === a.t ? b.r : a.r + (b.r - a.r) * ((t - a.t) / (b.t - a.t));
+  }
+  return pts[pts.length - 1]!.r;
+}
+
+/**
+ * Advance the wall to the current sim-time: set its radius, fire any contraction
+ * markers crossed (staging for the HUD/feed), and lock every Band 2–4 area the circle
+ * has now fully cleared — failing any claim caught mid-attempt (spec §4). The Band-1
+ * core is never swept; it locks at the buzzer in finishGame.
+ */
+function updateWall(state: GameState, board: Board): void {
+  const T = state.clock.simTime;
+  state.wall.radiusKm = wallRadiusAt(state, board, T);
+
+  while (state.wall.nextContractionAt != null && T >= state.wall.nextContractionAt) {
+    const band = BANDS_BY_CONTRACTION[state.wall.contractionsDone];
+    state.wall.contractionsDone += 1;
+    if (band != null) {
+      log(state, "contraction", { band, at: state.wall.nextContractionAt });
+      state.wall.liveBands = state.wall.liveBands.filter((b) => b !== band);
     }
-    a.locked = true;
-    log(state, "area_locked", { band: lockedBand, holder: a.holderTeamId }, undefined, a.id);
+    state.wall.nextContractionAt =
+      state.config.wall.contractionsAtMin[state.wall.contractionsDone] ?? null;
   }
 
-  state.wall.liveBands = state.wall.liveBands.filter((b) => b !== lockedBand);
-  const next = state.config.wall.contractionsAtMin[state.wall.contractionsDone];
-  state.wall.nextContractionAt = next ?? null; // null → Band 1 locks at the buzzer
+  for (const a of Object.values(state.areas)) {
+    if (a.locked) continue;
+    const area = getArea(board, a.id);
+    if (area.band === 1) continue; // core locks only at the buzzer
+    if (areaNearKm(board, a.id) >= state.wall.radiusKm) {
+      for (const t of state.teams) {
+        if (t.busyClaim?.areaId === a.id && t.busyUntilSimTime != null && t.busyUntilSimTime > T) {
+          t.busyUntilSimTime = null;
+          t.busyClaim = null;
+          t.lastFailedClaimAreaId = a.id;
+          log(state, "claim_fail", { reason: "wall" }, t.id, a.id);
+        }
+      }
+      a.locked = true;
+      log(state, "area_locked", { band: area.band, holder: a.holderTeamId }, undefined, a.id);
+    }
+  }
 }
 
 function spawnCache(state: GameState, board: Board, T: number): void {

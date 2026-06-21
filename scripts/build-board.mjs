@@ -61,6 +61,44 @@ function distanceKm(a, b) {
   return Math.hypot(dx, dy);
 }
 
+/** Project a lng/lat to local km plane around an origin (for point-to-segment math). */
+function toLocalKm(p, origin) {
+  const R = 6371;
+  const latRad = (origin.lat * Math.PI) / 180;
+  return {
+    x: (p.lng - origin.lng) * (Math.PI / 180) * Math.cos(latRad) * R,
+    y: (p.lat - origin.lat) * (Math.PI / 180) * R,
+  };
+}
+
+/** Shortest distance (km) from `origin` to a segment AB, all lng/lat. */
+function pointToSegmentKm(origin, A, B) {
+  const a = toLocalKm(A, origin); // origin is the local (0,0)
+  const b = toLocalKm(B, origin);
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len2 = dx * dx + dy * dy;
+  let t = len2 > 0 ? -(a.x * dx + a.y * dy) / len2 : 0;
+  t = Math.max(0, Math.min(1, t));
+  const px = a.x + t * dx;
+  const py = a.y + t * dy;
+  return Math.hypot(px, py);
+}
+
+/** Nearest distance (km) from `origin` to a (Multi)Polygon's boundary. */
+function nearestBoundaryKm(geom, origin) {
+  let best = Infinity;
+  for (const ring of outerRings(geom)) {
+    for (let i = 0; i < ring.length - 1; i++) {
+      const A = { lng: ring[i][0], lat: ring[i][1] };
+      const B = { lng: ring[i + 1][0], lat: ring[i + 1][1] };
+      const d = pointToSegmentKm(origin, A, B);
+      if (d < best) best = d;
+    }
+  }
+  return best;
+}
+
 // --- normalize features ----------------------------------------------------
 
 const titleCase = (s) =>
@@ -106,6 +144,12 @@ const VALUE_BY_BAND = { 1: 8, 2: 4, 3: 2, 4: 1 }; // spec §7: 8/4/2/1 (Band 1�
 
 const areas = features.map((f) => {
   const band = bandFor(f);
+  // nearKm = how close the area's nearest edge gets to downtown (the Loop centroid).
+  // The closing wall (a shrinking circle on the Loop) locks an area only once its
+  // radius drops below this — i.e. when no part of the area is inside the circle.
+  // The Loop contains the centre, so it's 0 (stays live until the buzzer).
+  const nearKm =
+    f.id === loop.id ? 0 : round(nearestBoundaryKm(f.geometry, loop.centroid), 4);
   return {
     id: f.id,
     name: f.name,
@@ -113,6 +157,7 @@ const areas = features.map((f) => {
     band,
     value: VALUE_BY_BAND[band],
     centroid: { lat: round(f.centroid.lat, 6), lng: round(f.centroid.lng, 6) },
+    nearKm,
     deckSize: band === 1 ? 12 : 5, // core gets a deep deck; others ~5 (spec §2.4)
   };
 });

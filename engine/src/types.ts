@@ -22,6 +22,11 @@ export interface AreaStatic {
   band: 1 | 2 | 3 | 4;
   value: number;
   centroid: LatLng;
+  /** Nearest distance (km) from the Loop centroid to this area's edge. The closing
+   *  wall (a shrinking circle on the Loop) locks the area once its radius drops below
+   *  this — i.e. when no part of the area is inside the circle. Loop = 0. Optional so
+   *  synthetic test boards (no geometry) fall back to centroid distance. */
+  nearKm?: number;
   deckSize: number;
 }
 
@@ -120,6 +125,9 @@ export interface WallState {
   liveBands: Array<1 | 2 | 3 | 4>;
   contractionsDone: number;
   nextContractionAt: number | null; // null once the core contraction (buzzer) is next
+  /** Current wall radius (km from the Loop). An area is claimable while any part of
+   *  it is inside this circle (nearKm < radiusKm); it locks once the circle clears it. */
+  radiusKm: number;
 }
 
 export interface GameClock {
@@ -154,6 +162,9 @@ export interface Config {
   wall: {
     /** Sim-minute at which each contraction fires; locks band (4,3,2) in order. */
     contractionsAtMin: number[]; // e.g. [150, 300, 390]
+    /** Extra radius (km) beyond the outermost area's edge at game start, so the whole
+     *  city is comfortably inside the circle before the wall begins to close. */
+    edgeMarginKm: number;
   };
   bandValues: Record<"1" | "2" | "3" | "4", number>;
   challenge: {

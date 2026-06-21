@@ -37,15 +37,10 @@ export function distanceKm(a: LatLng, b: LatLng): number {
   return Math.hypot(dx, dy);
 }
 
-/** Radius (km) of the current live zone: farthest live area from the Loop + margin. */
-export function liveRadiusKm(board: ClientBoard, state: GameState): number {
-  const loop = board.areas.find((a) => a.id === board.loopAreaId)!.centroid;
-  let max = 0;
-  for (const a of board.areas) {
-    if (!state.wall.liveBands.includes(a.band)) continue;
-    max = Math.max(max, distanceKm(loop, a.centroid));
-  }
-  return max + 1.5;
+/** Radius (km) of the wall circle — the engine's authoritative value, so the drawn
+ *  circle exactly matches what's claimable (any area touching it is still in play). */
+export function liveRadiusKm(_board: ClientBoard, state: GameState): number {
+  return state.wall.radiusKm;
 }
 
 /** A circle polygon (for the closing wall overlay) around a center. */
