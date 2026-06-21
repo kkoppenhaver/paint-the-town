@@ -50,7 +50,9 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
 @media (max-width: 1200px) {
   .game-body {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: minmax(0, 1fr) minmax(120px, auto) minmax(110px, 26vh);
+    /* map gets less; the team panels (which now carry each team's diary) get the most
+       room and scroll internally; the global feed is a short strip at the bottom. */
+    grid-template-rows: minmax(0, 0.8fr) minmax(0, 1.5fr) minmax(80px, 15vh);
     grid-template-areas:
       "center center"
       "left   right"
@@ -59,7 +61,6 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
   .left { border-right: 1px solid var(--line); }
   .right { border-left: none; }
   .feedwrap { border-left: none; }
-  .left, .right { max-height: 34vh; }
   /* compact the HUD so it never pushes the map down at narrow widths */
   .hud { flex-wrap: wrap; gap: 10px 14px; padding: 8px 12px; }
   .hud-scores { margin-left: 0; }
@@ -117,6 +118,19 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
 .panel-actions { display: flex; flex-direction: column; gap: 6px; }
 .travel-row { display: flex; gap: 6px; } .travel-row select { flex: 1; }
 .panel-inv { margin-top: 10px; } .inv-title { color: var(--muted); font-size: 11px; }
+
+/* per-team diary */
+.diary { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 8px; }
+.diary-title { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.diary-scroll { max-height: 150px; overflow: auto; }
+.diary-empty { color: var(--muted); font-size: 12px; font-style: italic; }
+.diary-row { display: flex; gap: 6px; align-items: baseline; padding: 2px 0; font-size: 12px; border-bottom: 1px solid #1b202c; }
+.diary-time { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.diary-ico { width: 14px; text-align: center; flex: none; }
+.diary-text { min-width: 0; }
+.d-claim_success .diary-text, .d-cache_grab .diary-text { color: #86efac; }
+.d-capture .diary-text { color: #fca5a5; }
+.d-claim_fail .diary-text { color: #f59e9e; }
 
 button { background: #2a3142; color: var(--text); border: 1px solid var(--line); border-radius: 5px; padding: 6px 10px; cursor: pointer; }
 button:hover:not(:disabled) { background: #333d52; }

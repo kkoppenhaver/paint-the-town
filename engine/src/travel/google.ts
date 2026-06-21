@@ -4,6 +4,34 @@ import { simTimeToDeparture, type TravelProvider, type TravelResult } from "./pr
 
 const ROUTES_URL = "https://routes.googleapis.com/directions/v2:computeRoutes";
 
+interface RouteJson {
+  duration?: string;
+  legs?: Array<{
+    steps?: Array<{
+      transitDetails?: {
+        stopDetails?: { departureStop?: { name?: string }; arrivalStop?: { name?: string } };
+        transitLine?: { name?: string; nameShort?: string; vehicle?: { type?: string } };
+      };
+    }>;
+  }>;
+}
+
+/** Human itinerary from a Routes response — e.g. "Brown Line @ Belmont → Red Line @ Fullerton".
+ *  Walking steps are omitted; only the transit boardings (the bit a player narrates). */
+function transitSummary(route: RouteJson | undefined): string | undefined {
+  const steps = route?.legs?.flatMap((l) => l.steps ?? []) ?? [];
+  const hops: string[] = [];
+  for (const s of steps) {
+    const td = s.transitDetails;
+    if (!td) continue;
+    const line = td.transitLine?.name ?? td.transitLine?.nameShort;
+    const from = td.stopDetails?.departureStop?.name;
+    if (line && from) hops.push(`${line} @ ${from}`);
+    else if (line) hops.push(line);
+  }
+  return hops.length ? hops.join(" → ") : undefined;
+}
+
 /**
  * Live Google Routes adapter (Compute Routes, TRANSIT) — spec §2.3. Server-side
  * only; the key never reaches a browser. Resolves the true schedule-aware travel
@@ -46,10 +74,9 @@ export function createGoogleProvider(apiKey: string): TravelProvider {
         });
 
         if (!res.ok) throw new Error(`Routes API ${res.status}: ${await res.text()}`);
-        const json = (await res.json()) as {
-          routes?: Array<{ duration?: string }>;
-        };
-        const durStr = json.routes?.[0]?.duration; // e.g. "1234s"
+        const json = (await res.json()) as { routes?: RouteJson[] };
+        const route = json.routes?.[0];
+        const durStr = route?.duration; // e.g. "1234s"
         if (!durStr) throw new Error("no transit route");
 
         const seconds = Number(durStr.replace(/s$/, ""));
@@ -58,6 +85,7 @@ export function createGoogleProvider(apiKey: string): TravelProvider {
         const result: TravelResult = {
           minutes: capped,
           source: capped < minutes ? "cap" : "google",
+          summary: transitSummary(route),
         };
         memo.set(key, result);
         return result;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { GameState, PowerUpType, Team } from "@ptt/engine";
 import type { Intent } from "../net";
 import type { ClientBoard } from "../helpers";
+import { Diary } from "./Diary";
 
 interface Props {
   board: ClientBoard;
@@ -118,6 +119,8 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
       )}
       </>
       )}
+
+      <Diary state={state} board={board} teamId={team.id} />
     </div>
   );
 }
