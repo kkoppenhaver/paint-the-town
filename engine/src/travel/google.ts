@@ -36,11 +36,15 @@ function transitSummary(route: RouteJson | undefined): string | undefined {
 const walkMin = (a: LatLng, b: LatLng): number => (distanceKm(a, b) / WALK_KMH) * 60;
 /** The point we route to/from for an area: its real transit anchor, else its centroid. */
 const routePoint = (board: Board, id: AreaId): LatLng => getArea(board, id).anchor ?? getArea(board, id).centroid;
-/** Walk from an area's centre to its transit anchor (the "get to the station" leg). */
-const accessMin = (board: Board, id: AreaId): number => {
-  const a = getArea(board, id);
-  return a.anchor ? walkMin(a.centroid, a.anchor) : 0;
-};
+
+// Access time at each end (walk to the station + wait), scaled by how well-served the
+// area is: a hub (score 5) has transit within a few minutes; a desert (score 1) means a
+// long walk to its one far station. Using the centroid→single-anchor distance over-charged
+// dense areas — an 11-min walk to a train inside the Loop, which has a station every block.
+const ACCESS_BASE_MIN = 3;
+const ACCESS_PER_LEVEL_MIN = 2.5;
+const accessMin = (board: Board, id: AreaId): number =>
+  ACCESS_BASE_MIN + (5 - (getArea(board, id).transitScore ?? 4)) * ACCESS_PER_LEVEL_MIN;
 
 /**
  * Live Google Routes adapter (Compute Routes, TRANSIT) — spec §2.3. Server-side only;
