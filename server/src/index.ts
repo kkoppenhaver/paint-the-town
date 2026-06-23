@@ -7,9 +7,17 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { WebSocketServer, type WebSocket } from "ws";
-import { attachTransit, formatDebugLogText, type Board } from "@ptt/engine";
-import { Room } from "./room.js";
-import type { ClientMessage, ServerMessage } from "./protocol.js";
+import {
+  attachTransit,
+  createGoogleProvider,
+  estimateProvider,
+  formatDebugLogText,
+  Room,
+  type Board,
+  type ClientMessage,
+  type ServerMessage,
+  type TravelProvider,
+} from "@ptt/engine";
 
 const here = dirname(fileURLToPath(import.meta.url));
 // Load server/.env (e.g. GOOGLE_MAPS_API_KEY) if present; no-op when it's absent.
@@ -27,6 +35,12 @@ try {
 }
 attachTransit(board.areas, join(here, "../../data")); // anchors + transit scores for routing
 const PORT = Number(process.env.PORT ?? 8787);
+
+// Pick the travel provider once and inject it into every room (the engine's Room is
+// host-agnostic and no longer reads the environment itself).
+const mapsKey = process.env.GOOGLE_MAPS_API_KEY;
+const provider: TravelProvider = mapsKey ? createGoogleProvider(mapsKey) : estimateProvider;
+const providerName = mapsKey ? "google" : "estimate";
 
 const rooms = new Map<string, Room>();
 const clients = new Map<WebSocket, string>(); // socket -> room id
@@ -51,7 +65,7 @@ function writeRoomDebugLog(room: Room, reason: string): void {
 function roomFor(id: string): Room {
   let r = rooms.get(id);
   if (!r) {
-    r = new Room(id, board);
+    r = new Room(id, board, provider, providerName);
     rooms.set(id, r);
   }
   return r;
@@ -117,7 +131,7 @@ wss.on("connection", (sock) => {
           room.setConfig(msg.config);
           break;
         case "start":
-          room.start();
+          room.start(Date.now());
           break;
         case "reset":
           if (room.state) writeRoomDebugLog(room, "reset"); // audit the game being torn down
@@ -147,7 +161,7 @@ wss.on("connection", (sock) => {
 setInterval(() => {
   for (const [id, room] of rooms) {
     if (room.phase === "running") {
-      const changed = room.tickClock(); // may flip phase to "finished" at the buzzer
+      const changed = room.tickClock(Date.now()); // may flip phase to "finished" at the buzzer
       if (changed) broadcast(id);
     }
     if (room.phase === "finished" && !room.debugLogged) {

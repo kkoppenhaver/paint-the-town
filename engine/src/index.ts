@@ -10,3 +10,5 @@ export * from "./headless.js";
 export * from "./telemetry.js";
 export * from "./debugLog.js";
 export { loadBoard, attachTransit } from "./loadBoard.js";
+export * from "./protocol.js";
+export { Room, type RoomPhase, type RoomSnapshot } from "./room.js";

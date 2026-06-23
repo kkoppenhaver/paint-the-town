@@ -6,3 +6,6 @@ dist/
 engine/dist/
 client/dist/
 logs/
+worker/public/
+worker/src/board.data.json
+.wrangler/

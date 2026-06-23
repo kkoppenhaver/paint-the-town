@@ -1,46 +1,57 @@
 // One game = one room. The room holds canonical state, runs the clock tick, and
-// resolves arrivals / contractions / cache spawns / captures (spec §10).
+// resolves arrivals / contractions / cache spawns / captures (spec §10). It is host-
+// agnostic: the Node server and the Cloudflare Durable Object both wrap this same class
+// and inject the travel provider, so the two hosts can never drift.
 
+import { buildDebugLog, type DebugLog } from "./debugLog.js";
 import {
-  buildDebugLog,
   createGame,
-  DEFAULT_CONFIG,
-  cloneConfig,
-  estimateProvider,
-  createGoogleProvider,
   isIdle,
   submitClaim,
   submitTravel,
   submitWait,
   tick,
   usePowerUp,
-  type Board,
-  type Config,
-  type DebugLog,
-  type GameState,
-  type TravelProvider,
-  type TeamId,
-  type AreaId,
-} from "@ptt/engine";
+} from "./engine.js";
+import { DEFAULT_CONFIG, cloneConfig } from "./config.js";
+import type { Board, Config, GameState, TeamId, AreaId } from "./types.js";
+import type { TravelProvider } from "./travel/provider.js";
 import type { Intent } from "./protocol.js";
 
+export type RoomPhase = "lobby" | "running" | "finished";
+
+/** Serializable room state — everything needed to rebuild a room after the host process
+ *  restarts or a Durable Object is evicted. The travel provider is NOT included; the host
+ *  re-injects it on restore. */
+export interface RoomSnapshot {
+  phase: RoomPhase;
+  config: Config;
+  spawns: Record<TeamId, AreaId>;
+  state: GameState | null;
+  debugLogged: boolean;
+  lastTickReal: number;
+}
+
+/** A real-time tick that fast-forwards a full hibernated interval would teleport the game
+ *  clock; cap the elapsed real time we honor per tick so a cold DO wake stays sane. */
+const MAX_TICK_DT_SEC = 2;
+
 export class Room {
-  phase: "lobby" | "running" | "finished" = "lobby";
+  phase: RoomPhase = "lobby";
   config: Config = cloneConfig(DEFAULT_CONFIG);
   spawns: Record<TeamId, AreaId> = {};
   state: GameState | null = null;
   /** Set once a finished game's debug log has been written (avoid duplicate writes). */
   debugLogged = false;
-  private provider: TravelProvider;
   private lastTickReal = 0; // epoch ms of the previous clock tick
 
   constructor(
     public readonly id: string,
     private board: Board,
+    private provider: TravelProvider,
+    providerName: Config["travel"]["provider"] = "estimate",
   ) {
-    const key = process.env.GOOGLE_MAPS_API_KEY;
-    this.provider = key ? createGoogleProvider(key) : estimateProvider;
-    this.config.travel.provider = key ? "google" : "estimate";
+    this.config.travel.provider = providerName;
   }
 
   setSpawn(teamId: TeamId, areaId: AreaId): void {
@@ -60,26 +71,26 @@ export class Room {
     }
   }
 
-  start(): void {
+  start(nowReal: number): void {
     for (const t of this.config.game.teams) {
       if (this.spawns[t.id] == null) throw new Error(`team ${t.id} has no spawn`);
     }
     this.state = createGame(this.config, this.board, this.spawns);
     this.phase = "running";
     this.debugLogged = false;
-    this.lastTickReal = Date.now();
+    this.lastTickReal = nowReal;
   }
 
   /**
    * Advance the real-time clock since the last tick. Time creeps while a team has a
    * pending decision and fast-forwards while all teams are committed (executing
    * travel/challenges). Returns true if any game-time elapsed (i.e. broadcast-worthy).
+   * `nowReal` is epoch ms supplied by the host (Date.now() on Node, the alarm time on a DO).
    */
-  tickClock(): boolean {
+  tickClock(nowReal: number): boolean {
     if (this.phase !== "running" || !this.state) return false;
-    const now = Date.now();
-    const dtSec = (now - this.lastTickReal) / 1000;
-    this.lastTickReal = now;
+    const dtSec = Math.min((nowReal - this.lastTickReal) / 1000, MAX_TICK_DT_SEC);
+    this.lastTickReal = nowReal;
     if (dtSec <= 0) return false;
     const pacing = this.state.config.pacing; // live config (patchable mid-game)
     const anyDeciding = this.state.teams.some(isIdle);
@@ -103,7 +114,8 @@ export class Room {
     return buildDebugLog(this.state, this.board, meta);
   }
 
-  /** Apply an intent, then fast-forward the clock to the next decision point. */
+  /** Apply an intent. The real-time tick loop owns the clock, so committing both teams
+   *  makes time fast-forward on the next tick rather than jumping instantly here. */
   async applyIntent(teamId: TeamId, intent: Intent): Promise<void> {
     if (!this.state || this.phase !== "running") throw new Error("game not running");
     const s = this.state;
@@ -125,13 +137,33 @@ export class Room {
         });
         break;
     }
-    // The real-time tick loop (tickClock) owns the clock now: committing both teams
-    // makes time fast-forward on the next tick rather than jumping instantly here.
   }
 
   /** Teams currently facing a decision (clock frozen for them). */
   idleTeams(): TeamId[] {
     if (!this.state) return [];
     return this.state.teams.filter(isIdle).map((t) => t.id);
+  }
+
+  /** Capture full room state for persistence (DO snapshot / restart recovery). */
+  snapshot(): RoomSnapshot {
+    return {
+      phase: this.phase,
+      config: this.config,
+      spawns: this.spawns,
+      state: this.state,
+      debugLogged: this.debugLogged,
+      lastTickReal: this.lastTickReal,
+    };
+  }
+
+  /** Rehydrate from a previously captured snapshot (provider stays injected). */
+  restore(snap: RoomSnapshot): void {
+    this.phase = snap.phase;
+    this.config = snap.config;
+    this.spawns = snap.spawns;
+    this.state = snap.state;
+    this.debugLogged = snap.debugLogged;
+    this.lastTickReal = snap.lastTickReal;
   }
 }

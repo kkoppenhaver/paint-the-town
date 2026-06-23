@@ -24,7 +24,9 @@ export function useRoom(room: string): RoomView {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket(WS_URL);
+    // Room id rides in the URL so the host (Cloudflare Worker) can route to the right
+    // Durable Object before the upgrade; the join message below is then a no-op resync.
+    const ws = new WebSocket(`${WS_URL}/ws?room=${encodeURIComponent(room)}`);
     wsRef.current = ws;
     ws.onopen = () => {
       setConnected(true);
