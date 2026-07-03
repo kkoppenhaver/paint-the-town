@@ -42,7 +42,6 @@ export default function App() {
   if (!board) return <div className="boot">Loading board… (is the server running on :8787?)</div>;
 
   const names = room.state ? Object.fromEntries(room.state.teams.map((t) => [t.id, t.name])) : {};
-  const idle = room.state ? room.state.teams.filter((t) => !t.inTransit && t.busyUntilSimTime == null && !t.waiting).map((t) => t.name) : [];
 
   return (
     <div className="app">
@@ -76,14 +75,14 @@ export default function App() {
           const myTurn = !!mine && room.phase === "running" && !mine.inTransit && mine.busyUntilSimTime == null && !mine.waiting;
           return (
         <div className={`game${myTurn ? " my-turn" : ""}`}>
-          <HUD state={room.state} idle={idle} />
+          <HUD state={room.state} viewerTeam={myTeam} />
           <div className="game-body">
             <aside className="left">
               <TeamPanel board={board} state={room.state!} team={left} selectedArea={selectedArea}
                 onIntent={room.sendIntent} controllable={!myTeam || left.id === myTeam} mine={!!myTeam && left.id === myTeam} />
             </aside>
             <main className="center">
-              <MapView board={board} state={room.state} teamColors={teamColors} onPickArea={setSelectedArea} />
+              <MapView board={board} state={room.state} teamColors={teamColors} onPickArea={setSelectedArea} viewerTeam={myTeam} />
               {selectedArea != null && <AreaTip board={board} state={room.state} id={selectedArea} />}
             </main>
             <aside className="right">
@@ -91,7 +90,7 @@ export default function App() {
                 onIntent={room.sendIntent} controllable={!myTeam} mine={false} />
             </aside>
             <section className="feedwrap">
-              <EventFeed log={room.state.log} config={room.state.config} names={names} />
+              <EventFeed log={room.state.log} config={room.state.config} names={names} viewerTeam={myTeam} />
             </section>
           </div>
           {room.phase === "finished" && <Summary board={board} state={room.state} onReset={room.reset} />}

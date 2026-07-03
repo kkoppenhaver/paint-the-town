@@ -97,6 +97,8 @@ body, html, #root { margin: 0; height: 100%; background: var(--bg); color: var(-
 .opp-tag { background: #2a3142; color: var(--muted); }
 .opp-status .spawn { color: var(--muted); }
 .panel-status { color: var(--muted); margin-bottom: 8px; min-height: 18px; }
+/* fog-of-war notice on the opponent card — their location is hidden until they claim */
+.panel-fog { font-style: italic; opacity: 0.75; }
 /* whose-turn signaling — readable at a glance across two tiled windows */
 .turn-banner { border-radius: 6px; padding: 7px 10px; margin-bottom: 8px; font-weight: 700; font-size: 13px; }
 .turn-banner.active { color: #fff; text-shadow: 0 1px 2px #0006; animation: turnpulse 1.4s ease-in-out infinite; }

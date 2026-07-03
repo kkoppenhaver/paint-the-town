@@ -11,6 +11,10 @@ interface Props {
   onPickArea?: (areaId: number) => void;
   /** Lobby use: areaId → color to tint (e.g. chosen spawns), applied when state is null. */
   highlight?: Record<number, string>;
+  /** The seat viewing this map (A/B), or null for hot-seat. When set, the opponent's
+   *  live position marker is hidden — you learn where they are only from the areas they
+   *  own (fill color). See TeamPanel/EventFeed for the matching fog-of-war rules. */
+  viewerTeam?: TeamId | null;
 }
 
 const BAND_TINT: Record<number, string> = { 1: "#3a2f4a", 2: "#2f3a4a", 3: "#2f4a3a", 4: "#3a3a2f" };
@@ -28,7 +32,7 @@ function labelExpr(bandValues?: Record<string, number>): maplibregl.ExpressionSp
   ] as unknown as maplibregl.ExpressionSpecification;
 }
 
-export function MapView({ board, state, teamColors, onPickArea, highlight }: Props) {
+export function MapView({ board, state, teamColors, onPickArea, highlight, viewerTeam }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
@@ -138,6 +142,9 @@ export function MapView({ board, state, teamColors, onPickArea, highlight }: Pro
     markersRef.current = [];
     if (state) {
       for (const t of state.teams) {
+        // Fog of war: hide the opponent's live position. You see their marker only in
+        // hot-seat (no seat chosen); otherwise the map reveals them via owned areas.
+        if (viewerTeam != null && t.id !== viewerTeam) continue;
         const area = board.areas.find((a) => a.id === t.locationAreaId);
         if (!area) continue;
         const el = document.createElement("div");

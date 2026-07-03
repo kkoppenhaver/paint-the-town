@@ -1,4 +1,4 @@
-import type { EventLogEntry } from "@ptt/engine";
+import type { EventLogEntry, TeamId } from "@ptt/engine";
 import { gameDateTime } from "../helpers";
 import type { Config } from "@ptt/engine";
 
@@ -9,8 +9,25 @@ const ICON: Record<string, string> = {
   wait: "…", game_end: "🏁",
 };
 
-export function EventFeed({ log, config, names }: { log: EventLogEntry[]; config: Config; names: Record<string, string> }) {
-  const recent = log.slice(-200).reverse();
+/** Opponent events that DON'T leak live position — the only ones a rival sees.
+ *  A successful claim/capture reveals the neighborhood they took (also shown on the
+ *  map by fill color); everything else (travel, arrivals, attempts, flops, caches,
+ *  power-ups, waits) is hidden until then. */
+const OPPONENT_VISIBLE = new Set(["claim_success", "capture"]);
+
+export function EventFeed({ log, config, names, viewerTeam }: {
+  log: EventLogEntry[];
+  config: Config;
+  names: Record<string, string>;
+  /** The seat viewing the feed (A/B), or null for hot-seat (sees everything). */
+  viewerTeam?: TeamId | null;
+}) {
+  // Fog of war: drop the opponent's movement/activity events, keeping world events
+  // (no teamId) and your own. In hot-seat there's no opponent, so nothing is filtered.
+  const visible = viewerTeam == null
+    ? log
+    : log.filter((e) => !e.teamId || e.teamId === viewerTeam || OPPONENT_VISIBLE.has(e.type));
+  const recent = visible.slice(-200).reverse();
   return (
     <div className="feed">
       <div className="feed-title">Event feed</div>
@@ -33,7 +50,7 @@ function label(e: EventLogEntry, names: Record<string, string>): string {
   const who = e.teamId ? names[e.teamId] ?? e.teamId : "";
   const area = e.areaId != null ? `area ${e.areaId}` : "";
   switch (e.type) {
-    case "game_start": return "Game start — spawns revealed";
+    case "game_start": return "Game start";
     case "travel_start": return `${who} → ${area} (${e.detail?.minutes}m, ${e.detail?.source})`;
     case "arrive": return `${who} arrived at ${area}`;
     case "claim_start": {

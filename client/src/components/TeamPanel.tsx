@@ -46,23 +46,26 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
           <div className="turn-banner committed">✓ committed — waiting for the clock to advance</div>
         )
       )}
-      {running && !controllable && idle && (
-        <div className="turn-banner deciding">… {team.name} is deciding</div>
+      {controllable ? (
+        <div className="panel-status">
+          {team.inTransit ? (
+            <>🚌 en route to area {team.inTransit.destId} · arrive {Math.round(team.inTransit.arrivalSimTime)}m</>
+          ) : team.busyUntilSimTime != null ? (
+            <>⏳ attempting {team.busyClaim?.areaId} · done {Math.round(team.busyUntilSimTime)}m</>
+          ) : team.waiting ? (
+            <>… waiting</>
+          ) : (
+            <>📍 at {here.name} (Band {here.band}{live ? ", live" : ", locked"})</>
+          )}
+        </div>
+      ) : (
+        // Fog of war: the opponent's whereabouts, transit and in-progress claims are
+        // hidden. You learn where they've been only from the areas they claim (which
+        // show on the map and in the feed).
+        <div className="panel-status panel-fog">🌫 location hidden — revealed only when {team.name} claims a neighborhood</div>
       )}
 
-      <div className="panel-status">
-        {team.inTransit ? (
-          <>🚌 en route to area {team.inTransit.destId} · arrive {Math.round(team.inTransit.arrivalSimTime)}m</>
-        ) : team.busyUntilSimTime != null ? (
-          <>⏳ attempting {team.busyClaim?.areaId} · done {Math.round(team.busyUntilSimTime)}m</>
-        ) : team.waiting ? (
-          <>… waiting</>
-        ) : (
-          <>📍 at {here.name} (Band {here.band}{live ? ", live" : ", locked"})</>
-        )}
-      </div>
-
-      {team.busyClaim?.challenge && (
+      {controllable && team.busyClaim?.challenge && (
         <div className="challenge-card">
           <div className="ch-head">🎯 {team.busyClaim.challenge.type} challenge · difficulty {team.busyClaim.challenge.difficulty}</div>
           <div className="ch-title">{team.busyClaim.challenge.title}</div>
@@ -120,7 +123,9 @@ export function TeamPanel({ board, state, team, selectedArea, onIntent, controll
       </>
       )}
 
-      <Diary state={state} board={board} teamId={team.id} />
+      {/* The diary is a team's private log of its own moves (transit legs, arrivals).
+          Only show it for controllable panels — never for the fogged opponent card. */}
+      {controllable && <Diary state={state} board={board} teamId={team.id} />}
     </div>
   );
 }

@@ -1,10 +1,20 @@
-import type { GameState } from "@ptt/engine";
+import type { GameState, Team, TeamId } from "@ptt/engine";
 import { gameDateTime } from "../helpers";
 
-export function HUD({ state, idle }: { state: GameState; idle: string[] }) {
+const isDeciding = (t: Team) => !t.inTransit && t.busyUntilSimTime == null && !t.waiting;
+
+export function HUD({ state, viewerTeam }: { state: GameState; viewerTeam?: TeamId | null }) {
   const next = state.wall.nextContractionAt;
   const toNext = next != null ? next - state.clock.simTime : null;
   const bandLocking = state.wall.liveBands.length ? Math.max(...state.wall.liveBands) : null;
+
+  // The clock crawls whenever ANY team is still deciding (a shared, observable fact).
+  // But we only NAME teams the viewer is allowed to see — never the opponent, whose
+  // deciding/committed status is hidden by fog of war.
+  const anyDeciding = state.teams.some(isDeciding);
+  const namedIdle = state.teams
+    .filter((t) => isDeciding(t) && (viewerTeam == null || t.id === viewerTeam))
+    .map((t) => t.name);
 
   return (
     <header className="hud">
@@ -42,8 +52,8 @@ export function HUD({ state, idle }: { state: GameState; idle: string[] }) {
       <div className="hud-block">
         {state.clock.phase === "finished" ? (
           <div className="paused done">game over</div>
-        ) : idle.length > 0 ? (
-          <div className="paused">🐢 clock slow — {idle.join(" & ")} deciding</div>
+        ) : anyDeciding ? (
+          <div className="paused">🐢 clock slow{namedIdle.length > 0 ? ` — ${namedIdle.join(" & ")} deciding` : ""}</div>
         ) : (
           <div className="paused live">⏩ fast-forwarding…</div>
         )}
